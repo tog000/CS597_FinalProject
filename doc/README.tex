@@ -1,0 +1,73 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+
+\usepackage[T1]{fontenc}
+
+\usepackage[bitstream-charter]{mathdesign}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{multirow}
+
+\usepackage[intlimits]{amsmath}
+
+\renewcommand{\arraystretch}{2}
+
+
+\title{{\large{COMPSCI 597: Big Data and NOSQL Databases}}\\\Large{Project Proposal}\\\hfill\\ Temporal and Spatial Characterization of Service Requests from Historical Data in Washington DC}
+\author{Tanner, Reuben and Trisca, Gabriel}
+
+\begin{document}
+
+\maketitle
+
+\section{Identify the dataset that you wish to analyse}
+We will be working with the 311 Service Request dataset from Washington DC.
+This dataset contains locations and attributes of service requests received by the Office of Customer Service Operations of the Office of Unified Communications (OUC) through the Mayor's Call Center (311)\cite{DatasetDocumentation}.
+
+The Service Request dataset was selected because it is already geocoded (avoiding the expensive reverse-geocoding operation on thousands of addresses), and also because the different service requests have unique identifiers that will make any clustering operations much easier to perform.
+
+\section{Mention the type of backend system that you would use}
+\begin{itemize}
+\item The dataset will be loaded into HDSF
+\item Hadoop will be used for processing and grouping the different service requests
+\item Mahout will be used to cluster data 
+\item Google Maps to visualize the data
+\end{itemize}
+
+\section{Articulate the type of analysis you would conduct}
+The primary objective behind collecting this data was to provide timely and accurate information for decision-making\cite{DatasetDocumentation}. Our intention is to analyse it further to achieve the following:
+
+\begin{enumerate}
+\item Create a map that characterizes and predicts the service requests on different areas of the city
+\item Identify the geographical areas where the city is spending more resources to maintain
+\item Infer correlation between different service requests based on proximity or temporal correlation.
+\end{enumerate}
+
+\section{Provide Metrics for your systems evaluation}
+\begin{itemize}
+\item The system can provide an overview of areas where certain service requests where reported on a temporal basis. 
+\item The system reports the areas with the most unique service requests
+\item The system identifies service requests that are most likely correlated due to geographical proximity or other reasons.
+\item The system can incorporate new data and generate visualizations on arbitrary datasets that conform to a pre-established schema.
+\end{itemize}
+
+\section{Outline a tentative timeline and projected number of hours}
+\begin{itemize}
+\item Randomly sample the data to understand its geographical distribution and the relative frequency of service requests \textbf{(10 hours)}
+\item Investigate applicable clustering/regression algorithms on top of Mahout \textbf{(15 hours)}
+\item Implementation of ML algorithms to produce the results outlined on \#3 \textbf{(20 hours)}
+\item Visualization of produced data \textbf{(15 hours)}
+\end{itemize}
+
+\begin{thebibliography}{9}
+
+\bibitem{DatasetDocumentation}
+  311 Service Requests \textit{Office of Unified Communications (OUC)}. http://data.dc.gov/Metadata.aspx?id=4 Accessed on October $9^{th}$ 2013
+
+\end{thebibliography}
+\end{document}
