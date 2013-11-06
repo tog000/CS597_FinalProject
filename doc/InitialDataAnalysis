@@ -1,0 +1,15 @@
+1. Copy of the dataset (load it on the onyx server and provide the location) (20 points)
+We are using the 311 requests from the NYC open data project. The link can be found here 
+
+https://nycopendata.socrata.com/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9?
+
+On onyx, the dataset can be found at 
+
+/home/students/[dtanner, gtrisca]/bigdata/nycdata.csv
+
+
+2. Analysis of the data (For example, if you were using white house dataset from 2011-2013 to predict the number of times person B will visit person A in 2014, provide an explanation of why do you think that data would be able to help answer that question?) (20 points)
+Since we are planning on developing a classifier that will predict, based on the weather, what types of 311 service requests will be made in NYC this data set will help us by, after some analysis, providing a labeled training set for our classifier. There are many useful patterns that we can draw from this dataset, the first of which we recognized is that if we can determine the frequencies of certain requests per day then we can cross-correlate that with the weather and determine which of the requests are correlated then begin training our classifier once we have determined this.
+
+3. Data cleansing issues that you identified and how did you address them? (10 points)
+For the most part, the data was actually quite clean so there were very minimal issues; some typical unstructured data problems but nothing that was irrecoverable. Some of the issues we had and workarounds are: missing data => throw out those rows, casing issues => normalize all casing during preprocessing, our data was in csv form but there were some comma's within a single field in the set so there was some extra reg-ex fanciness to overcome it. Another dataset related issue we encountered was not being able to get the full set at first, the website that provided the data didn't play well with wget and only provided the first 1.1GB which caused a moment of confusion.    
