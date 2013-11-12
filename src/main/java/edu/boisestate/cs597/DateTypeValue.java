@@ -38,6 +38,10 @@ public class DateTypeValue implements WritableComparable<DateTypeValue>, Cloneab
 		this.value = value;
 	}
 	
+	public boolean isWeather(){
+		return this.type.toString().startsWith(weatherPrefix);
+	}
+	
 	public DateTypeValue() {
 		this.date = new LongWritable();
 		this.type = new Text();
