@@ -26,6 +26,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.boisestate.cs597.model.DateTypeValue;
+
 public class CalculateCorrelation {
 	
 	//TODO 

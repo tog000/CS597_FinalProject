@@ -1,4 +1,4 @@
-package edu.boisestate.cs597;
+package edu.boisestate.cs597.model;
 
 import java.io.DataInput;
 import java.io.DataOutput;
