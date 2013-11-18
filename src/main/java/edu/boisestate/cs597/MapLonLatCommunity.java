@@ -4,7 +4,6 @@ import java.awt.geom.Path2D;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -33,6 +32,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -44,20 +44,22 @@ public class MapLonLatCommunity {
 	
 	public static class InitialMapper extends Mapper<LongWritable, Text, Text, Crime>{
 
-		private HashMap<Integer, Path2D.Float> communityPolygons = new HashMap<Integer, Path2D.Float>();		
+		private HashMap<Integer, Path2D.Double> communityPolygons = new HashMap<Integer, Path2D.Double>();
 		SimpleDateFormat sdf;
+
 		@Override
-		public void setup(Context context) throws IOException{
+		public void setup(Context context) throws IOException {
 			FileSystem fs = FileSystem.get(new Configuration());
 			Configuration jobConfig = context.getConfiguration();
-			String kmlFile = jobConfig.get("kml_location","");
-			 sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
-			
-			if(!kmlFile.isEmpty()){
+			String kmlFile = jobConfig.get("kml_location", "");
+			sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+
+			if (!kmlFile.isEmpty()) {
 				
 				Path pt=new Path(kmlFile);
 				                
                 try {
+                	
                 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 	DocumentBuilder dBuilder;
 					dBuilder = dbFactory.newDocumentBuilder();
@@ -68,37 +70,48 @@ public class MapLonLatCommunity {
             		XPath xpath = XPathFactory.newInstance().newXPath();
 	            	
 	            	NodeList nodeList = document.getElementsByTagName("Placemark");
-	            	Node communityArea, coordinates;
-	            	Path2D.Float poly;
+	            	String communityArea, coordinates;
+	            	Path2D.Double poly;
+	            	
+	            	int failed = 0;
 	            	
 	            	for(int i=0;i<nodeList.getLength();i++){
 	            		
-	            		communityArea = (Node)xpath.evaluate("//name", nodeList.item(i), XPathConstants.NODE);
-	            		coordinates = (Node)xpath.evaluate("//LinearRing/coordinates", nodeList.item(i), XPathConstants.NODE);
-	            		
-	            		poly = new Path2D.Float();
-	            		
-	            		String parts1[] = coordinates.getTextContent().split(" ");
-	            		
-	            		String parts2[];
-	            		for(String coordinate : parts1){
-	            			if(!coordinate.isEmpty()){
-		            			parts2 = coordinate.split(",");
-		            			poly.moveTo(new Float(parts2[0]), new Float(parts2[1]));
-	            			}
-	            		}
-	            		poly.closePath();
-	            		
-	            		try{
-	            			communityPolygons.put(Integer.valueOf(communityArea.getTextContent()), poly);
-	            		}catch(Exception e){
-	            			continue;
-	            		}
-	            		
-	            	}
-	            	
+						Node node = nodeList.item(i);
+
+						if (node.getNodeType() == Node.ELEMENT_NODE) {
+							Element eElement = (Element) node;
+							communityArea = eElement.getElementsByTagName("name").item(0).getTextContent();
+							coordinates = eElement.getElementsByTagName("coordinates").item(0).getTextContent();
+
+							poly = new Path2D.Double();
+
+							String parts1[] = coordinates.split(" ");
+							String parts2[];
+
+							for (String coordinate : parts1) {
+								if (!coordinate.isEmpty()) {
+									parts2 = coordinate.split(",");
+									poly.moveTo(new Double(parts2[0]) * 1, new Double(parts2[1]) * 1);
+								}
+							}
+							poly.closePath();
+
+							try {
+								communityPolygons.put(Integer.valueOf(Integer.valueOf(communityArea)), poly);
+							} catch (Exception e) {
+								// we lose a large section of coordinates here
+								failed += 1;
+								continue;
+							}
+
+						}
+
+					}
+
+	            	System.out.println("Failed polygons: "+failed);
 					
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                } catch (ParserConfigurationException | SAXException e) {
 					e.printStackTrace();
 				}
                 
@@ -139,13 +152,15 @@ public class MapLonLatCommunity {
 						c.lat = new FloatWritable(Float.valueOf(parts[19]));
 						c.lon = new FloatWritable(Float.valueOf(parts[20]));
 						
-						if(c.communityArea.get() != -1){
-							for(Entry<Integer, Path2D.Float> entry : communityPolygons.entrySet()){
-								if(entry.getValue().contains(c.lon.get(),c.lat.get())){
-									c.communityArea = new IntWritable(entry.getKey());
-								}
-							}
-						}
+						System.out.printf("Got an unknown point (%d,%d)",c.lon.get(), c.lat.get());
+						
+//						if(c.communityArea.get() != -1){
+//							for(Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet()){
+//								if(entry.getValue().contains(c.lon.get(),c.lat.get())){
+//									c.communityArea = new IntWritable(entry.getKey());
+//								}
+//							}
+//						}
 					}
 					
 					context.write(new Text(c.communityArea.toString()), c.clone());
@@ -176,13 +191,13 @@ public class MapLonLatCommunity {
 	public static void main(String args[]) throws Exception{
 		
 		
-		String test = "1948394,HH135386,01/19/2002 05:30:00 AM,066XX S DREXEL AV,0320,ROBBERY,STRONGARM - NO WEAPON,STREET,false,false,0321,,,,03,1183328,1861117,2002,03/30/2006 09:10:16 PM,41.77409866233949,-87.60350258370381,\"(41.77409866233949, -87.60350258370381)\"";
-		
-		String parts[] = test.split(",",-1);
-		System.out.println(parts[19]);
-		System.out.println(parts[20]);
-		
-		System.exit(1);
+//		String test = "1948394,HH135386,01/19/2002 05:30:00 AM,066XX S DREXEL AV,0320,ROBBERY,STRONGARM - NO WEAPON,STREET,false,false,0321,,,,03,1183328,1861117,2002,03/30/2006 09:10:16 PM,41.77409866233949,-87.60350258370381,\"(41.77409866233949, -87.60350258370381)\"";
+//		
+//		String parts[] = test.split(",",-1);
+//		System.out.println(parts[19]);
+//		System.out.println(parts[20]);
+//		
+//		System.exit(1);
 		
 		Configuration conf = new Configuration();
 	    FileSystem fs = FileSystem.get(conf);
