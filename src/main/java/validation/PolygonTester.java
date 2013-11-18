@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.boisestate.cs597;
+package validation;
 
 import java.awt.geom.Path2D;
 import java.io.IOException;

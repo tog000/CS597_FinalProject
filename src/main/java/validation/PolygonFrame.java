@@ -1,4 +1,4 @@
-package edu.boisestate.cs597;
+package validation;
 
 import java.awt.BasicStroke;
 import java.awt.Container;
