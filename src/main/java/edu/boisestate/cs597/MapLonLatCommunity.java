@@ -88,11 +88,17 @@ public class MapLonLatCommunity {
 
 							String parts1[] = coordinates.split(" ");
 							String parts2[];
-
+							boolean moved = false;
 							for (String coordinate : parts1) {
 								if (!coordinate.isEmpty()) {
 									parts2 = coordinate.split(",");
-									poly.moveTo(new Double(parts2[0]) * 1, new Double(parts2[1]) * 1);
+									//poly.moveTo(new Double(parts2[0]) * 1, new Double(parts2[1]) * 1);
+									if (moved) {
+										poly.lineTo(new Double(parts2[0]), new Double(parts2[1]));
+									} else {
+										poly.moveTo(new Double(parts2[0]), new Double(parts2[1]));
+										moved = true;
+									}
 								}
 							}
 							poly.closePath();
@@ -152,15 +158,23 @@ public class MapLonLatCommunity {
 						c.lat = new FloatWritable(Float.valueOf(parts[19]));
 						c.lon = new FloatWritable(Float.valueOf(parts[20]));
 						
-						System.out.printf("Got an unknown point (%d,%d)",c.lon.get(), c.lat.get());
-						
-//						if(c.communityArea.get() != -1){
-//							for(Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet()){
-//								if(entry.getValue().contains(c.lon.get(),c.lat.get())){
-//									c.communityArea = new IntWritable(entry.getKey());
-//								}
-//							}
-//						}
+						if(c.communityArea.get() == -1){
+							
+							System.out.printf("Got an unknown point (%f,%f)...",c.lon.get(), c.lat.get());
+							
+							boolean found = false;
+							for(Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet()){
+								if(entry.getValue().contains(c.lon.get(),c.lat.get())){
+									System.out.printf("FOUND area=%d)\n",entry.getKey());
+									c.communityArea = new IntWritable(entry.getKey());
+									found = true;
+									break;
+								}
+							}
+							if(!found){
+								System.out.printf("NOT FOUND\n");
+							}
+						}
 					}
 					
 					context.write(new Text(c.communityArea.toString()), c.clone());

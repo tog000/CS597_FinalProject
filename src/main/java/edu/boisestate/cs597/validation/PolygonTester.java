@@ -128,6 +128,7 @@ public class PolygonTester {
     	crimes.add(new Point2D.Double(-87.68182,41.99075));
     	crimes.add(new Point2D.Double(-87.702034, 42.006805));
     	crimes.add(new Point2D.Double(-87.58966, 41.755917));
+    	crimes.add(new Point2D.Double(-87.681824,41.990749));
     	
     	for (final Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet()){
     		
