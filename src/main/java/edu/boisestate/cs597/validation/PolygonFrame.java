@@ -1,4 +1,4 @@
-package validation;
+package edu.boisestate.cs597.validation;
 
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.KEY_STROKE_CONTROL;
