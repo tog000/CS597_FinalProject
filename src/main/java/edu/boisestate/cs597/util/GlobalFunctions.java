@@ -73,7 +73,7 @@ public class GlobalFunctions {
         }
     }
     
-    public static void subsampleData(String inputFile, String outputFile)
+    public static void subsampleDataToFile(String inputFile, String outputFile)
     {
         StringBuilder builder = new StringBuilder();
         String line;
