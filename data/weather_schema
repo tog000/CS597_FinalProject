@@ -1,0 +1,25 @@
+SN32 - Minimum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+DAPR - Number of days included in the multiday precipitation total (MDPR)
+AWND - Average daily wind speed (tenths of meters per second)
+DASF - Number of days included in the multiday snow fall total (MDSF) 
+SNOW - Snowfall (mm)
+MXPN - Daily maximum temperature of water in an evaporation pan (tenths of degrees C)
+TMIN - Minimum temperature (tenths of degrees C)
+WESF - Water equivalent of snowfall (tenths of mm)
+WESD - Water equivalent of snow on the ground (tenths of mm)
+TMAX - Maximum temperature (tenths of degrees C)
+MDEV - Multiday evaporation total (tenths of mm; use with DAEV)
+SNWD - Snow depth (mm)
+MNPN - Daily minimum temperature of water in an evaporation pan (tenths of degrees C)
+MDPR - Multiday precipitation total (tenths of mm; use with DAPR and DWPR, if available)
+EVAP - Evaporation of water from evaporation pan (tenths of mm)
+PRCP - Precipitation (tenths of mm)
+DAEV - Number of days included in the multiday evaporation total (MDEV)
+SX52 - Maximum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+SN53 - Minimum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+TSUN - Daily total sunshine (minutes)
+SX53 - Maximum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+SN52 - Minimum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+SX32 - Maximum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+TOBS - Temperature at the time of observation (tenths of degrees C)
+MDSF - Multiday snowfall total

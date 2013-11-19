@@ -5,7 +5,7 @@
 \usepackage{fullpage}
 
 
-\title{{\large{COMPSCI 597: Big Data and NOSQL Databases}}\\Assignment 6}
+\title{{\large{COMPSCI 597: Big Data and NOSQL Databases}}\\Alpha Release}
 \author{Tanner, Reuben, Trisca, Gabriel}
 
 \begin{document}
@@ -13,16 +13,42 @@
 \maketitle
 \subsection*{Copy of the dataset (load it on the onyx server and provide the location) (20 points)}
 
+We are working with four datasets:
+\begin{description}
+	\item[Weather] Daily weather summaries from the City of Chicago for the time period 2001 – 2013 \\\textit{Location: http://www.ncdc.noaa.gov/cdo-web/}
+	
+	\item[Crime] This dataset reflects reported incidents of crime (with the exception of murders where data exists for each victim) that occurred in the City of Chicago from 2001 to present, minus the most recent seven days. Data is extracted from the Chicago Police Department's CLEAR (Citizen Law Enforcement Analysis and Reporting) system. \\\textit{Location: https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2}
+	
+	\item[Socioeconomic Indicators] Census Data - Selected socioeconomic indicators in Chicago, 2007 – 2011 \\\textit{Location: https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2}
+	
+	\item[Public Health Statistics] Selected public health indicators by Chicago community area.\\\textit{Location: https://data.cityofchicago.org/Health-Human-Services/Public-Health-Statistics-Selected-public-health-in/iqnk-2tcu}
+	
+\end{description}
 
+
+On \texttt{onyx}, the dataset can be found at \\\texttt{/home/students/dtanner/bigdata/*}
 
 
 \subsection*{Analysis of the data (20 points)}
 
-We will be looking at the spatial distribution of service requests and inferring and predicting 
+We are developing a predictive analyzer that, based on time, weather, location and other factors predicts what types of crimes will be committed in Chicago. This data set will be processed into a correlation matrix, and training examples for a classifier. 
 
+The first step in the analysis was to create a subsample of the data and see if there crimes that happened frequently enough to warrant further analysis. Once this was established, we proceeded to compare correlation between variables in the datasets to identify what crimes are correlated with a location or weather variable to later train a classifier that could predict crimes successfully.
 
+There are many useful patterns that we found in this dataset, and the highly correlated variables are being compiled into a training set for a supervised learning algorithm.
 
 
 \subsection*{Data cleansing issues that you identified and how did you address them? (10 points)}
+
+For the most part, the data was actually quite clean so there were very minimal issues; some typical unstructured data problems but nothing that was irrecoverable. At first, we thought one of the more critical pieces of data we would need is the latitude and longitude coordinates and that is true in many cases but in order to do analysis at a higher level, it seemed better to have a less granular judge of proximity. Through some research we discovered that Chicago is broken up in to approximately 75 "community areas"; unfortunately, the existing rows that had a community area code specified was quite small so our initial analysis largely consisted of figuring out which crimes occurred in which community area by reverse geocoding. Other issues we had were trivial: casing issues which were solved by normalizing all casing during preprocessing and our data was in csv form but there were some comma's within a single field in the set so we performed some extra reg-ex parsing fanciness to overcome it.
+
+\section*{Code}
+
+The code can be downloaded by issuing:
+
+\begin{verbatim}
+	git pull https://github.com/CS597/Eucleia
+\end{verbatim}
+
 
 \end{document}
