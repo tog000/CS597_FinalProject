@@ -116,7 +116,23 @@ public class PolygonTester {
 
     public static void main(String[] args) throws IOException
     {
-        setup(args[0]);
+    	setup("data/Kmlcommunityareas.kml");
+    	
+    	LinkedList<Point2D.Double> crimes = new LinkedList<Point2D.Double>();
+    	crimes.add(new Point2D.Double(-87.68182,41.99075));
+    	crimes.add(new Point2D.Double(-87.702034, 42.006805));
+    	crimes.add(new Point2D.Double(-87.58966, 41.755917));
+    	crimes.add(new Point2D.Double(-87.681824,41.990749));
+    	
+    	for (final Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet()){
+    		
+    		for(Point2D.Double crime : crimes){
+    			if(entry.getValue().contains(crime)){
+    				System.out.printf("Crime %d belongs to polygon %d\n",crimes.indexOf(crime),entry.getKey());
+    			}
+    		}
+            
+    	}
         for (final Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet())
         {
             SwingUtilities.invokeLater(new Runnable() {
