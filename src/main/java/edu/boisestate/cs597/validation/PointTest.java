@@ -1,11 +1,12 @@
+package edu.boisestate.cs597.validation;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//package validation;
 
-import edu.boisestate.cs597.util.GlobalFunctions;
+
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
@@ -17,12 +18,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import validation.PolygonResource;
+
+import edu.boisestate.cs597.util.GlobalFunctions;
 
 /**
  *
  * @author reuben
  */
+
+/**
 public class PointTest {
     public static void main(String[] args)
     {
@@ -68,3 +72,4 @@ public class PointTest {
         }
     }
 }
+/**/

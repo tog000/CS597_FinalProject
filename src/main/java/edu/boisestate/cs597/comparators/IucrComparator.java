@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package comparators;
+package edu.boisestate.cs597.comparators;
 
 import edu.boisestate.cs597.model.Crime;
 import org.apache.hadoop.io.WritableComparable;

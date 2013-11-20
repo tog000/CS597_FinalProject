@@ -3,23 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package validation;
+package edu.boisestate.cs597.validation;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+
 import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  *
  * @author reuben
  */
-public class PolygonTester {
+public class PolygonResource {
 
     private static HashMap<Integer, Path2D.Double> communityPolygons = new HashMap<Integer, Path2D.Double>();
     private static SimpleDateFormat sdf;

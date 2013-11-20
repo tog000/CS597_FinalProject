@@ -1,8 +1,5 @@
 package edu.boisestate.cs597;
 
-import comparators.IucrComparator;
-import edu.boisestate.cs597.model.Crime;
-import edu.boisestate.cs597.util.GlobalFunctions;
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
@@ -16,6 +13,10 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+
+import edu.boisestate.cs597.comparators.IucrComparator;
+import edu.boisestate.cs597.model.Crime;
+import edu.boisestate.cs597.util.GlobalFunctions;
 
 public class TopCrimes {
 

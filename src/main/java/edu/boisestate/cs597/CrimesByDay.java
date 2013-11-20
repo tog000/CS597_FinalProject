@@ -1,7 +1,5 @@
 package edu.boisestate.cs597;
 
-import comparators.DateComparator;
-import edu.boisestate.cs597.model.Crime;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +18,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.boisestate.cs597.model.Crime;
 import edu.boisestate.cs597.util.GlobalFunctions;
 
 public class CrimesByDay {
