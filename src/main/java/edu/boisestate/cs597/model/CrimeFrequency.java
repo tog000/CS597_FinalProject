@@ -116,6 +116,6 @@ public class CrimeFrequency implements WritableComparable<CrimeFrequency>, Clone
     public String toString()
     {
 //        return "[iucr:"+this.iucr+", date:" + this.date+", crimeType:"+this.crimeType+", frequency:"+this.frequency+"]";
-        return this.iucr + "\t" + this.date + "\t" + this.crimeType + "\t" + this.frequency;
+        return this.iucr + "," + this.date + "," + this.crimeType + "," + this.frequency;
     }
 }
