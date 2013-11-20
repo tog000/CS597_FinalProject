@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,18 +39,15 @@ import org.xml.sax.SAXException;
 
 public class GlobalFunctions {
 
-    private static Pattern csvPat = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-    private static Pattern tsvPat = Pattern.compile("\\t");
-    private static int date = 2;
-    private static int iucr = 4;
-    private static int crimeType = 5;
-    private static SimpleDateFormat chiCsvDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    private static final Pattern csvPat = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+    private static final Pattern tsvPat = Pattern.compile("\\t");
+    private static final SimpleDateFormat chiCsvDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    private static Calendar cal = Calendar.getInstance();
 
-    //returns crimes by count in descending order
+    //returns crimes in descending order
     public static LinkedList<String> parseTop50(String file) throws IOException
     {
-        final int IUCR = 0;
-        LinkedList<String> requests = new LinkedList<>();
+        LinkedList<String> iucrs = new LinkedList<>();
         Path path = new Path(file);
         FileSystem fs = FileSystem.get(path.toUri(), new Configuration());
         InputStream is = (fs.open(new Path(path.toUri().toString())));
@@ -59,10 +57,11 @@ public class GlobalFunctions {
             while ((line = reader.readLine()) != null)
             {
                 String[] split = tsvPat.split(line);
-                requests.addLast(split[IUCR]);
+                iucrs.addLast(GlobalFunctions.parseCrime(split[0]).getIUCR().toString());
+                System.out.println(GlobalFunctions.parseCrime(split[0]));
             }
         }
-        return requests;
+        return iucrs;
     }
 
     public static void subsampleDataOnHdfs(String inputFile, String outputFile)
@@ -132,48 +131,51 @@ public class GlobalFunctions {
         Crime c = new Crime();
         Date date;
         if (parts.length >= 21)
-        try
         {
-            date = chiCsvDate.parse(parts[2]);
-            Long millis = date.getTime();
-            c.date = new LongWritable(millis);
-            
-            c.block = new Text(parts[3]);
-            
-            c.IUCR = new Text(parts[4]);
-            
-            c.locationDescription = new Text(parts[7]);
-            
-            c.arrest = new BooleanWritable(Boolean.parseBoolean(parts[8]));
-
-            c.communityArea = new IntWritable(-1);
-            if (!parts[13].isEmpty())
+            try
             {
-                c.communityArea = new IntWritable(Integer.valueOf(parts[13]));
-            }
+                date = chiCsvDate.parse(parts[2]);
+                Long millis = date.getTime();
+                c.date = new LongWritable(millis);
 
-            if (!parts[19].isEmpty())
-            {
-                c.lat = new DoubleWritable(Double.valueOf(parts[19]));
-                c.lon = new DoubleWritable(Double.valueOf(parts[20]));
+                c.block = new Text(parts[3]);
 
-                if (c.communityArea.get() != -1)
+                c.IUCR = new Text(parts[4]);
+
+                c.locationDescription = new Text(parts[7]);
+
+                c.arrest = new BooleanWritable(Boolean.parseBoolean(parts[8]));
+
+                c.communityArea = new IntWritable(-1);
+                if (!parts[13].isEmpty())
                 {
-                    for (Map.Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet())
+                    c.communityArea = new IntWritable(Integer.valueOf(parts[13]));
+                }
+
+                if (!parts[19].isEmpty())
+                {
+                    c.lat = new DoubleWritable(Double.valueOf(parts[19]));
+                    c.lon = new DoubleWritable(Double.valueOf(parts[20]));
+
+                    if (c.communityArea.get() != -1)
                     {
-                        if (entry.getValue().contains(c.lon.get(), c.lat.get()))
+                        for (Map.Entry<Integer, Path2D.Double> entry : communityPolygons.entrySet())
                         {
-                            c.communityArea = new IntWritable(entry.getKey());
+                            if (entry.getValue().contains(c.lon.get(), c.lat.get()))
+                            {
+                                c.communityArea = new IntWritable(entry.getKey());
+                            }
                         }
                     }
                 }
-            }           
-            return c;
-        }
-        catch (ParseException | NumberFormatException e)
-        {
-            e.printStackTrace();
-            return null;
+                return c;
+            }
+            catch (ParseException | NumberFormatException e)
+            {
+                System.err.println("Error while parsing initial crime");
+                e.printStackTrace();
+                return null;
+            }
         }
         else
         {
@@ -240,6 +242,8 @@ public class GlobalFunctions {
                         }
                         catch (Exception e)
                         {
+                            System.err.println("Error while getting community area in extract polygons");
+                            e.printStackTrace();
                             continue;
                         }
                     }
@@ -247,6 +251,7 @@ public class GlobalFunctions {
             }
             catch (ParserConfigurationException | SAXException | IOException e)
             {
+                System.err.println("Error while extracting polygon from xml");
                 e.printStackTrace();
             }
         }
@@ -262,8 +267,43 @@ public class GlobalFunctions {
         }
         catch (ArrayIndexOutOfBoundsException | ParseException | NumberFormatException e)
         {
+            System.err.println("Error while parsing crime frequency");
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Crime parseCrime(String line)
+    {
+        String[] split = csvPat.split(line, -1);
+        Crime c = new Crime();
+        try
+        {
+            c.setDate(new LongWritable(Long.parseLong(split[0])));
+            c.setIUCR(new Text(split[1]));
+            c.setBlock(new Text(split[2]));
+            c.setLocationDescription(new Text(split[3]));
+            c.setArrest(new BooleanWritable(Boolean.parseBoolean(split[4])));
+            c.setCommunityArea(new IntWritable(Integer.parseInt(split[5])));
+            c.setLon(new DoubleWritable(Double.parseDouble(split[6])));
+            c.setLat(new DoubleWritable(Double.parseDouble(split[7])));
+            return c;
+        }
+        catch (NumberFormatException e)
+        {
+            System.err.println("Error while parsing crime");
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static String getMDYfromMillis(long millis)
+    {
+        cal.setTime(new Date(millis));
+        int month = cal.get(Calendar.MONTH); //returns january as 0
+        ++month;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return String.format("%s/%s/%d", month < 10 ? "0"+month : month+"" , day < 10 ? "0"+day : day+"" ,year);
     }
 }

@@ -56,8 +56,6 @@ public class MapLonLatCommunity {
     {
         if (args.length == 0) usage();
         
-        Configuration conf = new Configuration();
-
         GenericOptionsParser gop = new GenericOptionsParser(args);
         String[] options = gop.getRemainingArgs();
 

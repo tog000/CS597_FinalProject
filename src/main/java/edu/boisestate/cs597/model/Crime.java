@@ -31,7 +31,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		lon = new DoubleWritable();
 		lat = new DoubleWritable();
 	}
-
+        
 	public void readFields(DataInput dataInput) throws IOException {
 		date = new LongWritable();
 		IUCR = new Text();
@@ -65,14 +65,14 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 	// Useful for sorting
 	public int compareTo(Crime pw) {
-		int cmp = this.date.compareTo(pw.date);
+		int cmp = this.getIUCR().compareTo(pw.getIUCR());
 		return cmp;
 	}
 
 	@Override
 	public String toString() {
 		return date + "," + IUCR + "," + block + "," + locationDescription + ","
-				+ arrest + "," + communityArea + "," + lon+ "," + lat;
+				+ arrest + "," + communityArea + "," + lon+ "," + lat + "\t";
 	}
 
 	@Override
@@ -90,4 +90,86 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 		return c;
 	}
+
+    public LongWritable getDate()
+    {
+        return date;
+    }
+
+    public void setDate(LongWritable date)
+    {
+        this.date = date;
+    }
+
+    public Text getIUCR()
+    {
+        return IUCR;
+    }
+
+    public void setIUCR(Text IUCR)
+    {
+        this.IUCR = IUCR;
+    }
+
+    public Text getBlock()
+    {
+        return block;
+    }
+
+    public void setBlock(Text block)
+    {
+        this.block = block;
+    }
+
+    public Text getLocationDescription()
+    {
+        return locationDescription;
+    }
+
+    public void setLocationDescription(Text locationDescription)
+    {
+        this.locationDescription = locationDescription;
+    }
+
+    public BooleanWritable getArrest()
+    {
+        return arrest;
+    }
+
+    public void setArrest(BooleanWritable arrest)
+    {
+        this.arrest = arrest;
+    }
+
+    public IntWritable getCommunityArea()
+    {
+        return communityArea;
+    }
+
+    public void setCommunityArea(IntWritable communityArea)
+    {
+        this.communityArea = communityArea;
+    }
+
+    public DoubleWritable getLon()
+    {
+        return lon;
+    }
+
+    public void setLon(DoubleWritable lon)
+    {
+        this.lon = lon;
+    }
+
+    public DoubleWritable getLat()
+    {
+        return lat;
+    }
+
+    public void setLat(DoubleWritable lat)
+    {
+        this.lat = lat;
+    }
+        
+        
 }

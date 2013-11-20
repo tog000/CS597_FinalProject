@@ -1,9 +1,14 @@
-# $1 = File path for input data
-# $2 = File path for output data
-mvn clean install
-hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.RequestsByDay $1 $2 $3
-#hadoop fs -rmr $2
-#hadoop fs -copyToLocal $2 .
-#sort -t$'\t' -k2 -nr `basename $2`/part-r-00000 > `basename $2`/output.txt
-#hadoop fs -put `basename $2`/output.txt $2
-#echo "data can be found in `basename $2`/output.txt"
+# $1 = File path for input
+# $2 = File path for output 
+# $3 = File path for kml 
+hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.MapLonLatCommunity $1 `dirname $2`/part0 $3
+hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.TopCrimes `dirname $2`/part0 `dirname $2`/part1 $3
+hadoop fs -copyToLocal `dirname $2`/part1 .
+hadoop fs -rmr `dirname $2`/part1
+head -n 50 part1/part-r-00000 | sort -t$'\t' -k2 -nr > part1/top50.csv
+hadoop fs -mkdir `dirname $2`/part2
+hadoop fs -put part1/top50.csv `dirname $2`/part2
+rm -rf part1
+hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CrimesByDay `dirname $2`/part0 `dirname $2`/part3 `dirname $2`/part2/top50.csv
+hadoop fs -rmr `dirname $2`/part2 
+#hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CalculateCorrelation `dirname $2`/part0 `dirname $2`/part4
