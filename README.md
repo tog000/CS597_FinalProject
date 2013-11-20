@@ -1,3 +1,7 @@
+Build and run instructions:
+1. Place the following files on HDFS: chicagocrimes.csv, communityareas.kml, publichealth.csv, socioeconomic.csv and **WEATHER??**
+2. Invoke the run script by: $ ./run.sh /fully/qualified/path/to/chicagocrimes.csv /fully/qualified/path/to/outputDir /fully/qualified/path/to/communityareas.kml
+
 COMPSCI 597: Big Data and NOSQL Databases Project Proposal
 Temporal and Spatial Characterization of Service Requests from Historical Data in Washington DC
 Tanner, Reuben and Trisca, Gabriel October 10, 2013
