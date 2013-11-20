@@ -5,7 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.BooleanWritable;
-import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -13,34 +13,34 @@ import org.apache.hadoop.io.WritableComparable;
 
 public class Crime implements WritableComparable<Crime>, Cloneable {
 	public LongWritable date;
-	public IntWritable IUCR;
+	public Text IUCR;
 	public Text block;
 	public Text locationDescription;
 	public BooleanWritable arrest;
 	public IntWritable communityArea;
-	public FloatWritable lon;
-	public FloatWritable lat;
+	public DoubleWritable lon;
+	public DoubleWritable lat;
 
 	public Crime() {
 		date = new LongWritable();
-		IUCR = new IntWritable();
+		IUCR = new Text();
 		block = new Text();
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
 		communityArea = new IntWritable();
-		lon = new FloatWritable();
-		lat = new FloatWritable();
+		lon = new DoubleWritable();
+		lat = new DoubleWritable();
 	}
 
 	public void readFields(DataInput dataInput) throws IOException {
 		date = new LongWritable();
-		IUCR = new IntWritable();
+		IUCR = new Text();
 		block = new Text();
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
 		communityArea = new IntWritable();
-		lon = new FloatWritable();
-		lat = new FloatWritable();
+		lon = new DoubleWritable();
+		lat = new DoubleWritable();
 
 		date.readFields(dataInput);
 		IUCR.readFields(dataInput);
@@ -71,10 +71,8 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Crime [date=" + date + ", IUCR=" + IUCR + ", block=" + block
-				+ ", locationDescription=" + locationDescription + ", arrest="
-				+ arrest + ", communityArea=" + communityArea + ", lon=" + lon
-				+ ", lat=" + lat + "]";
+		return date + "," + IUCR + "," + block + "," + locationDescription + ","
+				+ arrest + "," + communityArea + "," + lon+ "," + lat;
 	}
 
 	@Override
@@ -82,13 +80,13 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		Crime c = new Crime();
 
 		c.date = new LongWritable(this.date.get());
-		c.IUCR = new IntWritable(this.IUCR.get());
+		c.IUCR = new Text(this.IUCR.toString());
 		c.block = new Text(this.block.toString());
 		c.locationDescription = new Text(this.locationDescription.toString());
 		c.arrest = new BooleanWritable(this.arrest.get());
 		c.communityArea = new IntWritable(this.communityArea.get());
-		c.lon = new FloatWritable(this.lon.get());
-		c.lat = new FloatWritable(this.lat.get());
+		c.lon = new DoubleWritable(this.lon.get());
+		c.lat = new DoubleWritable(this.lat.get());
 
 		return c;
 	}
