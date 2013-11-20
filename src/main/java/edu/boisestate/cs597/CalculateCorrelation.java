@@ -30,13 +30,6 @@ import edu.boisestate.cs597.model.DateTypeValue;
 
 public class CalculateCorrelation {
 	
-	//TODO 
-	// 2013-11-06 We need weather for every day and frequencies for every of the top50 for every day
-	// group by top50 id and emit 50*n different weather variables n
-	// reducer receives as key the top50 ID and values will be 500 days of n different weather indicators, and 500 days of frequencies
-	//
-	// 2013-11-07 Essentially what we are doing is a complete join, all the rows from one file against all the rows from the other!
-	
 	public static class InitialMapper extends Mapper<LongWritable, Text, Text, DateTypeValue>{
 		
 		private boolean isWeatherFile = false;
