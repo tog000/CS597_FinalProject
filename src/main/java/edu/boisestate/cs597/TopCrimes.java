@@ -22,6 +22,7 @@ import edu.boisestate.cs597.util.GlobalFunctions;
 public class TopCrimes {
 
 	public static final int NUMBER_OF_CRIMES = 50;
+	public static final int NUMBER_OF_COMMUNITY_AREAS = 77;
 	
     public static class TopCrimesMap extends Mapper<LongWritable, Text, Crime, IntWritable> {
 

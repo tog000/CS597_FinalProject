@@ -12,8 +12,10 @@ import org.apache.hadoop.io.WritableComparable;
 
 public class DateTypeValue implements WritableComparable<DateTypeValue>, Cloneable{
 	
-	public static final String top50Prefix = "t";
-	public static final String weatherPrefix = "w";
+	public static final String top50Prefix = "T";
+	public static final String weatherPrefix = "W";
+	public static final String healthPrefix = "H";
+	public static final String economyPrefix = "E";
 	
 	public LongWritable date;
 	public Text type;
@@ -40,6 +42,10 @@ public class DateTypeValue implements WritableComparable<DateTypeValue>, Cloneab
 	
 	public boolean isWeather(){
 		return this.type.toString().startsWith(weatherPrefix);
+	}
+	
+	public boolean isCrimeFrequency(){
+		return this.type.toString().startsWith(top50Prefix);
 	}
 	
 	public DateTypeValue() {

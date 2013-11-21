@@ -11,7 +11,7 @@ else
 		mvn package;
 	fi
 	echo "************ MAP CRIMES TO COMMUNITIES ************"
-	hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.MapLonLatCommunity $1 mapped_crimes $3
+	hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.MapLonLatCommunity $1/crime* mapped_crimes $3
 	echo "************ FIND TOP CRIME TYPES ************"
 	hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.TopCrimes mapped_crimes top_crimes
 	rm -r top_crimes
@@ -22,6 +22,10 @@ else
 	hadoop fs -put top_crimes/$top_filename top_crimes
 	echo "************ CALCULATE TOP CRIMES FOR EVERY DAY ************"
 	hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CrimesByDay mapped_crimes daily_crimes top_crimes/$top_filename
-	#hadoop fs -rmr `dirname $2`/part2 
-	#hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CalculateCorrelation `dirname $2`/part0 `dirname $2`/part4
+	hadoop fs -mkdir correlation/
+	hadoop fs -cp daily_crimes/* correlation
+	echo "************ CALCULATE CORRELATION BETWEEN WEATHER, SOCIOECONOMIC, HEALTH and CRIME ************"
+	#hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CalculateCorrelation $1/weather* $1/health* $1/economy* correlation output
+	hadoop jar target/finalproject-1.0-SNAPSHOT-jar-with-dependencies.jar edu.boisestate.cs597.CalculateCorrelation $1/weather* $1/health* $1/economy* correlation $2
+
 fi

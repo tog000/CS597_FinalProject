@@ -180,7 +180,7 @@ public class CalculateCorrelation {
 			}else if(filename.contains("health")){
 				fileType = FILE_TYPE.HEALTH_FILE;
 				
-			}else if(filename.contains("economic")){
+			}else if(filename.contains("economy")){
 				fileType = FILE_TYPE.ECONOMIC_FILE;
 				
 			}else{
@@ -194,9 +194,29 @@ public class CalculateCorrelation {
 			
 			// Split the line
 			String[] parts;
+			int columnNumber = 0;
+			
 			
 			switch(fileType){
 			
+				case CRIME_FILE:
+					Crime c = GlobalFunctions.parseCrime(line.toString());
+					millis = c.getDate().get();
+					// Write every frequency with the community area # as the key
+					for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
+						// One for every potential weather indicator
+						for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
+							context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
+						}
+						for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+						}
+						for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
+							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue(c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+						}
+						
+					}
+				break;
 				case WEATHER_FILE:
 					if(byteOffset.get() == 0L)return;
 				
@@ -213,24 +233,16 @@ public class CalculateCorrelation {
 					}
 					millis = date.getTime();
 					System.out.println("RelevantColumns="+Arrays.toString(relevantWeatherColumns));
-					// We want to write all these columns for every of the 50 top terms
-					for(int columnNumber : relevantWeatherColumns){
-						for (byte i=0;i<50;i++){
-							//System.out.printf("%s -> (%d,%s,%d)","t"+i+"w"+columnNumber,millis, DateTypeValue.weatherPrefix+columnNumber,i);
-							context.write(new Text("t"+i+"w"+columnNumber), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
-						}
-					}
-				break;
-				case CRIME_FILE:
 					
-					Crime c = GlobalFunctions.parseCrime(line.toString());
-					millis = c.getDate().get();
-					// Write every frequency with the community area # as the key
-					for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
-						// One for every potential weather indicator
-						for(int weatherColumn : relevantWeatherColumns){
-							//System.out.printf("%s -> (%d,%s,%d)","t"+currentTop50+"w"+weatherColumn,millis, DateTypeValue.top50Prefix, currentTop50);
-							//context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis, DateTypeValue.top50Prefix, Float.valueOf(frequencies[currentTop50])));
+					
+					// We want to write all these columns for every of the 50 top terms
+					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
+						columnNumber = relevantWeatherColumns[weatherColumn];
+						if(!parts[columnNumber].isEmpty()){
+							for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
+								//System.out.printf("%s -> (%d,%s,%d)","t"+i+"w"+columnNumber,millis, DateTypeValue.weatherPrefix+columnNumber,i);
+								context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+							}
 						}
 					}
 				break;
@@ -239,8 +251,15 @@ public class CalculateCorrelation {
 					
 					// Split the line
 					parts = line.toString().split(",");
+
+					millis = 0;
 					
-					
+					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
+						columnNumber = relevantHealthColumns[healthColumn];
+						if(!parts[columnNumber].isEmpty()){
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(Long.valueOf(parts[0]).longValue(),DateTypeValue.healthPrefix+columnNumber ,Float.valueOf(parts[columnNumber])));
+						}
+					}
 					
 				break;
 				case ECONOMIC_FILE:
@@ -248,6 +267,15 @@ public class CalculateCorrelation {
 					
 					// Split the line
 					parts = line.toString().split(",");
+					
+					millis = 0;
+					
+					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
+						columnNumber = relevantEconomicColumns[economicColumn];
+						if(!parts[columnNumber].isEmpty()){
+							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue(Long.valueOf(parts[0]).longValue(),DateTypeValue.economyPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+						}
+					}
 					
 				break;
 				
@@ -269,21 +297,41 @@ public class CalculateCorrelation {
 		
 		HashMap<Long, Point> dateMap = new HashMap<Long, Point>();
 		
-		
 		// We must align the dates
 		@Override
 		public void reduce(Text key, Iterable<DateTypeValue> values, Context context) throws IOException, InterruptedException{
 			
+			String type;
+			
 			for(DateTypeValue dtv : values){
 				
-				if(!dateMap.containsKey(dtv.date.get())){
-					dateMap.put(dtv.date.get(),new Point());
-				}
+				type = dtv.getType().toString();
 				
-				if(dtv.isWeather()){
-					dateMap.get(dtv.date.get()).y = dtv.value.get();
-				}else{
-					dateMap.get(dtv.date.get()).x = dtv.value.get();
+				// In this case we match by date
+				if(key.toString().startsWith("C")){
+					
+					if(!dateMap.containsKey(dtv.date.get())){
+						dateMap.put(dtv.date.get(),new Point());
+					}
+					
+					if(dtv.isWeather()){
+						dateMap.get(dtv.date.get()).y = dtv.value.get();
+					}else{
+						dateMap.get(dtv.date.get()).x = dtv.value.get();
+					}
+					
+				}else if(key.toString().startsWith("H") || key.toString().startsWith("E")){
+					
+					if(!dateMap.containsKey(dtv.getDate().get())){
+						dateMap.put(dtv.date.get(),new Point());
+					}
+					
+					if(dtv.isCrimeFrequency()){
+						dateMap.get(dtv.date.get()).y = dtv.value.get();
+					}else{
+						dateMap.get(dtv.date.get()).x = dtv.value.get();
+					}
+					
 				}
 			}
 			
@@ -313,29 +361,12 @@ public class CalculateCorrelation {
 			for(Float v:yArray) yPrimitive[i++] = v;
 			
 			SpearmansCorrelation sc = new SpearmansCorrelation();
-			double rho = sc.correlation(xPrimitive, yPrimitive);
 			
-			/*// Find correlation 
-			// TODO use apache commons to find means
-			for(int i=0;i<xs.size();i++){
-				totalX += xs.get(i);
-				totalY += ys.get(i);
+			double rho = 0;
+			
+			if(xPrimitive.length > 0 && yPrimitive.length > 0){
+				rho = sc.correlation(xPrimitive, yPrimitive);
 			}
-			
-			float avgX = totalX/((float)xs.size());
-			float avgY = totalY/((float)ys.size());
-			
-			float term1 = 0.0f;
-			float term2 = 0.0f;
-			float term3 = 0.0f;
-			
-			for(Point p : goodPoints){
-				term1 += (p.x - avgX)*(p.y - avgY);
-				term2 += Math.pow(p.x - avgX,2);
-				term3 += Math.pow(p.y - avgY,2);
-			}
-			
-			Double rho = term1/(Math.sqrt(term2*term3));*/
 			
 			//System.out.printf("For %s, freq=%d, weather=%d\n",key, totalFrequencies,totalWeatherPoints);
 			//System.out.printf("For %s, good points=%d\n",key, totalGoodPoints);
@@ -383,8 +414,16 @@ public class CalculateCorrelation {
         correlationJob.setOutputKeyClass(DoubleWritable.class);
         correlationJob.setOutputValueClass(Text.class);
         
-        FileInputFormat.setInputPaths(correlationJob, new Path(options[0]));
-        Path outputPath = new Path(options[1]);
+        // Weather files
+        FileInputFormat.addInputPath(correlationJob, new Path(options[0]));
+        // Health files
+        FileInputFormat.addInputPath(correlationJob, new Path(options[1]));
+        // Economy files
+        FileInputFormat.addInputPath(correlationJob, new Path(options[2]));
+        // Daily Crime files
+        FileInputFormat.addInputPath(correlationJob, new Path(options[3]));
+        
+        Path outputPath = new Path(options[4]);
 		if(fs.exists(outputPath)){
 	    	fs.delete(outputPath,true);
 	    }
