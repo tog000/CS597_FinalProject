@@ -209,10 +209,10 @@ public class CalculateCorrelation {
 							context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
 						}
 						for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
 						}
 						for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
-							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue(c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
 						}
 						
 					}
@@ -251,8 +251,6 @@ public class CalculateCorrelation {
 					
 					// Split the line
 					parts = line.toString().split(",");
-
-					millis = 0;
 					
 					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
 						columnNumber = relevantHealthColumns[healthColumn];
@@ -267,8 +265,6 @@ public class CalculateCorrelation {
 					
 					// Split the line
 					parts = line.toString().split(",");
-					
-					millis = 0;
 					
 					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
 						columnNumber = relevantEconomicColumns[economicColumn];
@@ -296,6 +292,7 @@ public class CalculateCorrelation {
 	public static class InitialReducer extends Reducer<Text, DateTypeValue, DoubleWritable, Text>{
 		
 		HashMap<Long, Point> dateMap = new HashMap<Long, Point>();
+		Collection<Point> goodPoints = new LinkedList<Point>();;
 		
 		// We must align the dates
 		@Override
@@ -303,8 +300,10 @@ public class CalculateCorrelation {
 			
 			String type;
 			
+			int count = 0;
+			
 			for(DateTypeValue dtv : values){
-				
+				count+=1;
 				type = dtv.getType().toString();
 				
 				// In this case we match by date
@@ -327,7 +326,11 @@ public class CalculateCorrelation {
 					}
 					
 					if(dtv.isCrimeFrequency()){
-						dateMap.get(dtv.date.get()).y = dtv.value.get();
+						//dateMap.get(dtv.date.get()).y = dtv.value.get();
+						Point p = new Point();
+						p.x = (float) dtv.date.get();
+						p.y = dtv.value.get();
+						goodPoints.add(p);
 					}else{
 						dateMap.get(dtv.date.get()).x = dtv.value.get();
 					}
@@ -335,8 +338,8 @@ public class CalculateCorrelation {
 				}
 			}
 			
+			
 			Collection<Point> pointValues = dateMap.values();
-			Collection<Point> goodPoints = new LinkedList<Point>();;
 			
 			LinkedList<Float> xArray = new LinkedList<Float>();
 			LinkedList<Float> yArray = new LinkedList<Float>();
@@ -352,6 +355,8 @@ public class CalculateCorrelation {
 				}
 			}
 			
+			System.out.println("For the key \""+key.toString()+"\" we have "+count+". The map has "+pointValues.size()+". Good Points "+goodPoints.size());
+			
 			double xPrimitive[] = new double[xArray.size()];
 			double yPrimitive[] = new double[yArray.size()];
 			
@@ -364,7 +369,7 @@ public class CalculateCorrelation {
 			
 			double rho = 0;
 			
-			if(xPrimitive.length > 0 && yPrimitive.length > 0){
+			if(xPrimitive.length > 1 && yPrimitive.length > 1){
 				rho = sc.correlation(xPrimitive, yPrimitive);
 			}
 			
