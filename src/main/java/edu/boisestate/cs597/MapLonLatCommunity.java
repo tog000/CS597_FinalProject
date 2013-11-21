@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -59,6 +60,9 @@ public class MapLonLatCommunity {
         GenericOptionsParser gop = new GenericOptionsParser(args);
         String[] options = gop.getRemainingArgs();
 
+        Configuration conf = new Configuration();
+	    FileSystem fs = FileSystem.get(conf);
+        
         Job lonLatConversionJob = new Job(new Configuration());
 
         lonLatConversionJob.setJobName("Find the community where the crime was commited");
@@ -69,7 +73,13 @@ public class MapLonLatCommunity {
         lonLatConversionJob.setMapOutputValueClass(Text.class);
         
         FileInputFormat.setInputPaths(lonLatConversionJob, new Path(options[0]));
-        FileOutputFormat.setOutputPath(lonLatConversionJob, new Path(options[1]));
+        Path outputPath = new Path(options[1]);
+		if(fs.exists(outputPath)){
+	    	fs.delete(outputPath,true);
+	    }
+		
+        FileOutputFormat.setOutputPath(lonLatConversionJob, outputPath);
+        
         Configuration jobConfig = lonLatConversionJob.getConfiguration();
         jobConfig.set("kml_location", options[2]);
 

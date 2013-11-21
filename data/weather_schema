@@ -1,3 +1,5 @@
+STATION,STATION_NAME,DATE,MXPN,MNPN,EVAP,MDEV,DAEV,SX32,SX52,SX53,SN32,SN52,SN53,MDPR,MDSF,DAPR,DASF,PRCP,SNWD,SNOW,TSUN,TMAX,TMIN,TOBS,WESD,WESF,AWND
+
 SN32 - Minimum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
 DAPR - Number of days included in the multiday precipitation total (MDPR)
 AWND - Average daily wind speed (tenths of meters per second)

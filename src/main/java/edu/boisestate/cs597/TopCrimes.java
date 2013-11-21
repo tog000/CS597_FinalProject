@@ -3,6 +3,7 @@ package edu.boisestate.cs597;
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -20,6 +21,8 @@ import edu.boisestate.cs597.util.GlobalFunctions;
 
 public class TopCrimes {
 
+	public static final int NUMBER_OF_CRIMES = 50;
+	
     public static class TopCrimesMap extends Mapper<LongWritable, Text, Crime, IntWritable> {
 
         @Override
@@ -67,8 +70,14 @@ public class TopCrimes {
         if (args.length == 0)
         {
             usage();
+        }else if (args.length == 1 && args[0].equals("getNumber")){
+        	System.out.println(TopCrimes.NUMBER_OF_CRIMES);
+        	System.exit(0);
         }
 
+        Configuration conf = new Configuration();
+	    FileSystem fs = FileSystem.get(conf);
+        
         GenericOptionsParser gop = new GenericOptionsParser(args);
         String[] options = gop.getRemainingArgs();
 
@@ -84,7 +93,12 @@ public class TopCrimes {
         topCrimes.setSortComparatorClass(IucrComparator.CrimeIucrComparator.class);
 
         FileInputFormat.setInputPaths(topCrimes, new Path(options[0]));
-        FileOutputFormat.setOutputPath(topCrimes, new Path(options[1]));
+
+        Path outputPath = new Path(options[1]);
+		if(fs.exists(outputPath)){
+	    	fs.delete(outputPath,true);
+	    }
+        FileOutputFormat.setOutputPath(topCrimes, outputPath);
 
         System.exit(topCrimes.waitForCompletion(true) ? 1 : 0);
     }

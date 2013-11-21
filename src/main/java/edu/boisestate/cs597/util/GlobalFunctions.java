@@ -285,8 +285,9 @@ public class GlobalFunctions {
             c.setLocationDescription(new Text(split[3]));
             c.setArrest(new BooleanWritable(Boolean.parseBoolean(split[4])));
             c.setCommunityArea(new IntWritable(Integer.parseInt(split[5])));
-            c.setLon(new DoubleWritable(Double.parseDouble(split[6])));
-            c.setLat(new DoubleWritable(Double.parseDouble(split[7])));
+            c.setFrequency(new IntWritable(Integer.parseInt(split[6])));
+            c.setLon(new DoubleWritable(Double.parseDouble(split[7])));
+            c.setLat(new DoubleWritable(Double.parseDouble(split[8])));
             return c;
         }
         catch (NumberFormatException e)

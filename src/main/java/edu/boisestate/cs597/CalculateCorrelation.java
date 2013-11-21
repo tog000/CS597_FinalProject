@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -26,13 +24,16 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.boisestate.cs597.model.Crime;
 import edu.boisestate.cs597.model.DateTypeValue;
+import edu.boisestate.cs597.util.GlobalFunctions;
 
 public class CalculateCorrelation {
 	
 	public static class InitialMapper extends Mapper<LongWritable, Text, Text, DateTypeValue>{
 		
-		private boolean isWeatherFile = false;
+		private enum FILE_TYPE {WEATHER_FILE, HEALTH_FILE, ECONOMIC_FILE, CRIME_FILE};
+		private FILE_TYPE fileType;
 		
 		//
 		// For REQUESTS files
@@ -46,16 +47,124 @@ public class CalculateCorrelation {
 		// For WEATHER files
 		//
 		private static int dateColumn = 1;
-		/**
-		 * 2 = Precipitation (tenths of mm) (PRCP)
-		 * 3 = Snow depth (mm) (SNWD)
-		 * 4 = Snowfall (mm) (SNOW)
-		 * 5 = Maximum temperature (tenths of degrees C) (TMAX)
-		 * 6 = Minimum temperature (tenths of degrees C) (TMIN)
-		 * 7 = Average daily wind speed (tenths of meters per second) (AWND)
-		 * 
-		 */
-		private static int[] relevantColumns = {2,3,4,5,6,7};
+
+		private static int[] relevantWeatherColumns = {2,3,4,5,6,7};
+		private static String[] relevantWeatherColumnNames = {"PRCP","SNWD","SNOW","TMAX","TMIN","AWND"};
+		
+		/*
+		
+		0 STATION
+		1 STATION_NAME
+		2 DATE
+		3 MXPN
+		4 MNPN
+		5 EVAP
+		6 MDEV
+		7 DAEV
+		8 SX32
+		9 SX52
+		10 SX53
+		11 SN32
+		12 SN52
+		13 SN53
+		14 MDPR
+		15 MDSF
+		16 DAPR
+		17 DASF
+		18 PRCP
+		19 SNWD
+		20 SNOW
+		21 TSUN
+		22 TMAX
+		23 TMIN
+		24 TOBS
+		25 WESD
+		26 WESF
+		27 AWND
+		
+		SN32 - Minimum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+		DAPR - Number of days included in the multiday precipitation total (MDPR)
+		AWND - Average daily wind speed (tenths of meters per second)
+		DASF - Number of days included in the multiday snow fall total (MDSF) 
+		SNOW - Snowfall (mm)
+		MXPN - Daily maximum temperature of water in an evaporation pan (tenths of degrees C)
+		TMIN - Minimum temperature (tenths of degrees C)
+		WESF - Water equivalent of snowfall (tenths of mm)
+		WESD - Water equivalent of snow on the ground (tenths of mm)
+		TMAX - Maximum temperature (tenths of degrees C)
+		MDEV - Multiday evaporation total (tenths of mm; use with DAEV)
+		SNWD - Snow depth (mm)
+		MNPN - Daily minimum temperature of water in an evaporation pan (tenths of degrees C)
+		MDPR - Multiday precipitation total (tenths of mm; use with DAPR and DWPR, if available)
+		EVAP - Evaporation of water from evaporation pan (tenths of mm)
+		PRCP - Precipitation (tenths of mm)
+		DAEV - Number of days included in the multiday evaporation total (MDEV)
+		SX52 - Maximum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+		SN53 - Minimum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+		TSUN - Daily total sunshine (minutes)
+		SX53 - Maximum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+		SN52 - Minimum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+		SX32 - Maximum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+		TOBS - Temperature at the time of observation (tenths of degrees C)
+		MDSF - Multiday snowfall total
+		*/
+		
+		//
+		// For HEALTH files
+		//
+		
+		private static int healthCommunityAreaColumn = 0;
+		private static int[] relevantHealthColumns = {4,5,6,7,10,18,26,27, 28};
+		private static String[] relevantHealthColumnNames = {"LOW_BIRTH_WEIGHT","PRENATAL_CARE","PRETERM_BIRTH","TEEN_BIRTH","CANCER","BLOOD_LEAD","NO_HIGHSCHOOL","INCOME","UNEMPLOYMENT"};
+		
+		/*
+		0  Community Area
+		1  Community Area Name
+		2  Birth Rate
+		3  General Fertility Rate
+		4  Low Birth Weight
+		5  Prenatal Care Beginning in First Trimester
+		6  Preterm Births
+		7  Teen Birth Rate
+		8  Assault (Homicide)
+		9  Breast cancer in females
+		10  Cancer (All Sites)
+		11  Colorectal Cancer
+		12  Diabetes-related
+		13  Firearm-related
+		14  Infant Mortality Rate
+		15  Lung Cancer
+		16  Prostate Cancer in Males
+		17  Stroke (Cerebrovascular Disease)
+		18  Childhood Blood Lead Level Screening
+		19  Childhood Lead Poisoning
+		20  Gonorrhea in Females
+		21  Gonorrhea in Males
+		22  Tuberculosis
+		23  Below Poverty Level
+		24  Crowded Housing
+		25  Dependency
+		26  No High School Diploma
+		27  Per Capita Income
+		28  Unemployment
+		*/
+		
+		private static int economicCommunityAreaColumn = 0;
+		private static int[] relevantEconomicColumns = {2,3,4,5,6};
+		private static String[] relevantEconomicColumnNames = {"CROWDED","BELOW_POVERTY","16+_UNEMPLOYED","25+_NO_HIGHSCHOOL","YOUR_OR_OLDER"};
+		
+		/*
+		0 Community Area Number
+		1 COMMUNITY AREA NAME
+		2 PERCENT OF HOUSING CROWDED
+		3 PERCENT HOUSEHOLDS BELOW POVERTY
+		4 PERCENT AGED 16+ UNEMPLOYED
+		5 PERCENT AGED 25+ WITHOUT HIGH SCHOOL DIPLOMA
+		6 PERCENT AGED UNDER 18 OR OVER 64
+		7 PER CAPITA INCOME 
+		8 HARDSHIP INDEX
+		*/
+		
 		
 		@Override
 		public void setup(Context context){
@@ -64,9 +173,18 @@ public class CalculateCorrelation {
 			String filename = fileSplit.getPath().toString();
 			
 			if(filename.contains("weather")){
-				isWeatherFile = true;
+				
+				fileType = FILE_TYPE.WEATHER_FILE;
 				sdf = new SimpleDateFormat("yyyyMMdd");
+				
+			}else if(filename.contains("health")){
+				fileType = FILE_TYPE.HEALTH_FILE;
+				
+			}else if(filename.contains("economic")){
+				fileType = FILE_TYPE.ECONOMIC_FILE;
+				
 			}else{
+				fileType = FILE_TYPE.CRIME_FILE;
 				sdf = new SimpleDateFormat("MM/dd/yyyy");
 			}
 		}
@@ -74,57 +192,67 @@ public class CalculateCorrelation {
 		@Override
 		public void map(LongWritable byteOffset, Text line, Context context) throws IOException, InterruptedException{
 			
-			// If we are reading the weather file
-			if(isWeatherFile){
+			// Split the line
+			String[] parts;
+			
+			switch(fileType){
+			
+				case WEATHER_FILE:
+					if(byteOffset.get() == 0L)return;
 				
-				if(byteOffset.get() == 0L)return;
-				
-				// Split the line
-				String[] parts = line.toString().split(",");
-				
-				try{
-					// Try to parse the date
-					date = sdf.parse(parts[dateColumn]);
-				}catch(ParseException e){
-					//e.printStackTrace();
-					// Failed to parse date, return.
-					return;
-				}
-				millis = date.getTime();
-				System.out.println("RelevantColumns="+Arrays.toString(relevantColumns));
-				// We want to write all these columns for every of the 50 top terms
-				for(int columnNumber : relevantColumns){
-					for (byte i=0;i<50;i++){
-						//System.out.printf("%s -> (%d,%s,%d)","t"+i+"w"+columnNumber,millis, DateTypeValue.weatherPrefix+columnNumber,i);
-						context.write(new Text("t"+i+"w"+columnNumber), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+					// Split the line
+					parts = line.toString().split(",");
+										
+					try{
+						// Try to parse the date
+						date = sdf.parse(parts[dateColumn]);
+					}catch(ParseException e){
+						//e.printStackTrace();
+						// Failed to parse date, return.
+						return;
 					}
-				}
-				
-				
-			}else{ // We are reading the top50 file
-				
-				String[] parts = line.toString().split("\t");
-				try{
-					// Try to parse the date
-					date = sdf.parse(parts[0]);
-				}catch(ParseException e){
-					//e.printStackTrace();
-					// Failed to parse date, return.
-					return;
-				}
-				millis = date.getTime();
-				// Split the frequencies for given date
-				frequencies = parts[1].subSequence(1, parts[1].length()-1).toString().split(",");
-				
-				System.out.println("RelevantColumns="+Arrays.toString(frequencies));
-				// Write every frequency with the ranking # as the key
-				for(byte currentTop50=0;currentTop50<frequencies.length;currentTop50++){
-					// One for every potential weather indicator
-					for(int weatherColumn : relevantColumns){
-						//System.out.printf("%s -> (%d,%s,%d)","t"+currentTop50+"w"+weatherColumn,millis, DateTypeValue.top50Prefix, currentTop50);
-						context.write(new Text("t"+currentTop50+"w"+weatherColumn), new DateTypeValue(millis, DateTypeValue.top50Prefix, Float.valueOf(frequencies[currentTop50])));
+					millis = date.getTime();
+					System.out.println("RelevantColumns="+Arrays.toString(relevantWeatherColumns));
+					// We want to write all these columns for every of the 50 top terms
+					for(int columnNumber : relevantWeatherColumns){
+						for (byte i=0;i<50;i++){
+							//System.out.printf("%s -> (%d,%s,%d)","t"+i+"w"+columnNumber,millis, DateTypeValue.weatherPrefix+columnNumber,i);
+							context.write(new Text("t"+i+"w"+columnNumber), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+						}
 					}
-				}
+				break;
+				case CRIME_FILE:
+					
+					Crime c = GlobalFunctions.parseCrime(line.toString());
+					millis = c.getDate().get();
+					// Write every frequency with the community area # as the key
+					for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
+						// One for every potential weather indicator
+						for(int weatherColumn : relevantWeatherColumns){
+							//System.out.printf("%s -> (%d,%s,%d)","t"+currentTop50+"w"+weatherColumn,millis, DateTypeValue.top50Prefix, currentTop50);
+							//context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis, DateTypeValue.top50Prefix, Float.valueOf(frequencies[currentTop50])));
+						}
+					}
+				break;
+				case HEALTH_FILE:
+					if(byteOffset.get() == 0L)return;
+					
+					// Split the line
+					parts = line.toString().split(",");
+					
+					
+					
+				break;
+				case ECONOMIC_FILE:
+					if(byteOffset.get() == 0L)return;
+					
+					// Split the line
+					parts = line.toString().split(",");
+					
+				break;
+				
+				default:
+					return;
 			}			
 		}
 	}
@@ -247,7 +375,7 @@ public class CalculateCorrelation {
 		correlationJob.setMapperClass(InitialMapper.class);
         correlationJob.setReducerClass(InitialReducer.class);
         
-        correlationJob.setJobName("Correlate Weather and daily frequencies");
+        correlationJob.setJobName("Correlate Weather and Demographics to Daily Crime Frequencies");
         
         correlationJob.setMapOutputKeyClass(Text.class);
         correlationJob.setMapOutputValueClass(DateTypeValue.class);
@@ -261,7 +389,7 @@ public class CalculateCorrelation {
 	    	fs.delete(outputPath,true);
 	    }
 		
-        FileOutputFormat.setOutputPath(correlationJob, new Path(options[1]));
+        FileOutputFormat.setOutputPath(correlationJob, outputPath);
         
         System.exit(correlationJob.waitForCompletion(true) ? 1 : 0);
         /**/

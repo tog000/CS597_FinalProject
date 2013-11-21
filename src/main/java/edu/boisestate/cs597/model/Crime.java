@@ -3,6 +3,7 @@ package edu.boisestate.cs597.model;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.DoubleWritable;
@@ -18,6 +19,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	public Text locationDescription;
 	public BooleanWritable arrest;
 	public IntWritable communityArea;
+	public IntWritable frequency;
 	public DoubleWritable lon;
 	public DoubleWritable lat;
 
@@ -28,6 +30,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
 		communityArea = new IntWritable();
+		frequency = new IntWritable();
 		lon = new DoubleWritable();
 		lat = new DoubleWritable();
 	}
@@ -39,6 +42,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
 		communityArea = new IntWritable();
+		frequency = new IntWritable();
 		lon = new DoubleWritable();
 		lat = new DoubleWritable();
 
@@ -48,6 +52,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		locationDescription.readFields(dataInput);
 		arrest.readFields(dataInput);
 		communityArea.readFields(dataInput);
+		frequency.readFields(dataInput);
 		lon.readFields(dataInput);
 		lat.readFields(dataInput);
 	}
@@ -59,6 +64,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		locationDescription.write(dataOutput);
 		arrest.write(dataOutput);
 		communityArea.write(dataOutput);
+		frequency.write(dataOutput);
 		lon.write(dataOutput);
 		lat.write(dataOutput);
 	}
@@ -72,7 +78,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	@Override
 	public String toString() {
 		return date + "," + IUCR + "," + block + "," + locationDescription + ","
-				+ arrest + "," + communityArea + "," + lon+ "," + lat + "\t";
+				+ arrest + "," + communityArea + "," + frequency + "," + lon + "," + lat + "\t";
 	}
 
 	@Override
@@ -85,13 +91,26 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		c.locationDescription = new Text(this.locationDescription.toString());
 		c.arrest = new BooleanWritable(this.arrest.get());
 		c.communityArea = new IntWritable(this.communityArea.get());
+		c.frequency = new IntWritable(this.frequency.get());
 		c.lon = new DoubleWritable(this.lon.get());
 		c.lat = new DoubleWritable(this.lat.get());
 
 		return c;
 	}
 
-    public LongWritable getDate()
+    public IntWritable getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(IntWritable frequency) {
+		this.frequency = frequency;
+	}
+	
+	public void setFrequency(int frequency) {
+		this.frequency = new IntWritable(frequency);
+	}
+
+	public LongWritable getDate()
     {
         return date;
     }
@@ -99,6 +118,11 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
     public void setDate(LongWritable date)
     {
         this.date = date;
+    }
+
+    public void setDate(Date date)
+    {
+        this.date = new LongWritable(date.getTime());
     }
 
     public Text getIUCR()
@@ -109,6 +133,11 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
     public void setIUCR(Text IUCR)
     {
         this.IUCR = IUCR;
+    }
+    
+    public void setIUCR(String IUCR)
+    {
+        this.IUCR = new Text(IUCR);
     }
 
     public Text getBlock()
