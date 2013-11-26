@@ -2,6 +2,7 @@ package edu.boisestate.cs597.util;
 
 import edu.boisestate.cs597.model.Crime;
 import edu.boisestate.cs597.model.CrimeFrequency;
+
 import java.awt.geom.Path2D;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,11 +15,13 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -288,11 +291,13 @@ public class GlobalFunctions {
             c.setFrequency(new IntWritable(Integer.parseInt(split[6])));
             c.setLon(new DoubleWritable(Double.parseDouble(split[7])));
             c.setLat(new DoubleWritable(Double.parseDouble(split[8])));
+            // Crime now also has a rating
+            c.setCrimeRanking(Integer.valueOf(split[9].trim()));
             return c;
         }
         catch (NumberFormatException e)
         {
-            System.err.println("Error while parsing crime");
+            System.err.println("Error while parsing crime.\nLINE="+line);
             e.printStackTrace();
             return null;
         }
@@ -307,4 +312,21 @@ public class GlobalFunctions {
         int year = cal.get(Calendar.YEAR);
         return String.format("%s/%s/%d", month < 10 ? "0"+month : month+"" , day < 10 ? "0"+day : day+"" ,year);
     }
+    
+    
+    public static class HashMapValueComparator implements Comparator<String>{
+    	Map<String, Integer> base;
+        public HashMapValueComparator(Map<String, Integer> base) {
+            this.base = base;
+        }
+		@Override
+		public int compare(String key1, String key2) {
+			Integer freq1 = base.get(key1);
+			Integer freq2 = base.get(key1);
+			return freq2.compareTo(freq1);
+		}
+    }
+    
 }
+
+    

@@ -5,7 +5,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.FloatWritable;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
@@ -89,4 +88,10 @@ public class DateTypeValue implements WritableComparable<DateTypeValue>, Cloneab
 		pw.value = new FloatWritable(this.value.get());
 		return pw;
 	}
+	@Override
+	public String toString() {
+		return "DateTypeValue [date=" + date + ", type=" + type + ", value="
+				+ value + "]";
+	}
+	
 }

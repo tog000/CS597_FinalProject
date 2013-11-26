@@ -22,6 +22,7 @@ else
 	hadoop fs -put top_crimes/$top_filename top_crimes
 	echo "************ CALCULATE TOP CRIMES FOR EVERY DAY ************"
 	hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CrimesByDay mapped_crimes daily_crimes top_crimes/$top_filename
+	hadoop fs -rmr correlation/
 	hadoop fs -mkdir correlation/
 	hadoop fs -cp daily_crimes/* correlation
 	echo "************ CALCULATE CORRELATION BETWEEN WEATHER, SOCIOECONOMIC, HEALTH and CRIME ************"

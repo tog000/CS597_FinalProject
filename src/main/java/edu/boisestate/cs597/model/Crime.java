@@ -22,6 +22,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	public IntWritable frequency;
 	public DoubleWritable lon;
 	public DoubleWritable lat;
+	public IntWritable crimeRanking; 
 
 	public Crime() {
 		date = new LongWritable();
@@ -33,6 +34,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		frequency = new IntWritable();
 		lon = new DoubleWritable();
 		lat = new DoubleWritable();
+		crimeRanking = new IntWritable();
 	}
         
 	public void readFields(DataInput dataInput) throws IOException {
@@ -45,6 +47,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		frequency = new IntWritable();
 		lon = new DoubleWritable();
 		lat = new DoubleWritable();
+		crimeRanking = new IntWritable();
 
 		date.readFields(dataInput);
 		IUCR.readFields(dataInput);
@@ -55,6 +58,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		frequency.readFields(dataInput);
 		lon.readFields(dataInput);
 		lat.readFields(dataInput);
+		crimeRanking.readFields(dataInput);
 	}
 
 	public void write(DataOutput dataOutput) throws IOException {
@@ -67,6 +71,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		frequency.write(dataOutput);
 		lon.write(dataOutput);
 		lat.write(dataOutput);
+		crimeRanking.write(dataOutput);
 	}
 
 	// Useful for sorting
@@ -78,7 +83,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	@Override
 	public String toString() {
 		return date + "," + IUCR + "," + block + "," + locationDescription + ","
-				+ arrest + "," + communityArea + "," + frequency + "," + lon + "," + lat + "\t";
+				+ arrest + "," + communityArea + "," + frequency + "," + lon + "," + lat + "," + crimeRanking + "\t";
 	}
 
 	@Override
@@ -94,6 +99,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 		c.frequency = new IntWritable(this.frequency.get());
 		c.lon = new DoubleWritable(this.lon.get());
 		c.lat = new DoubleWritable(this.lat.get());
+		c.crimeRanking = new IntWritable(this.crimeRanking.get());
 
 		return c;
 	}
@@ -140,7 +146,19 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
         this.IUCR = new Text(IUCR);
     }
 
-    public Text getBlock()
+    public IntWritable getCrimeRanking() {
+		return crimeRanking;
+	}
+
+	public void setCrimeRanking(IntWritable crimeRanking) {
+		this.crimeRanking = crimeRanking;
+	}
+	
+	public void setCrimeRanking(int crimeRanking) {
+		this.crimeRanking = new IntWritable(crimeRanking);
+	}
+
+	public Text getBlock()
     {
         return block;
     }

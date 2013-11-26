@@ -41,12 +41,12 @@ public class CalculateCorrelation {
 		private SimpleDateFormat sdf;
 		private Date date;
 		private long millis;
-		private String frequencies[];
+		//private String frequencies[];
 				
 		//
 		// For WEATHER files
 		//
-		private static int dateColumn = 1;
+		private static int dateColumn = 2;
 
 		private static int[] relevantWeatherColumns = {2,3,4,5,6,7};
 		private static String[] relevantWeatherColumnNames = {"PRCP","SNWD","SNOW","TMAX","TMIN","AWND"};
@@ -202,20 +202,22 @@ public class CalculateCorrelation {
 				case CRIME_FILE:
 					Crime c = GlobalFunctions.parseCrime(line.toString());
 					millis = c.getDate().get();
-					// Write every frequency with the community area # as the key
-					for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
-						// One for every potential weather indicator
-						for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
-							context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
-						}
-						for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
-						}
-						for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
-							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
-						}
-						
+					
+					// One for every potential weather indicator
+					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
+						context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
 					}
+					
+					// One for every health column. The "Date" is the community area
+					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
+						context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+					}
+					
+					// One for every economic column. The "Date" is the community area
+					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
+						context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+					}
+					
 				break;
 				case WEATHER_FILE:
 					if(byteOffset.get() == 0L)return;
@@ -227,13 +229,12 @@ public class CalculateCorrelation {
 						// Try to parse the date
 						date = sdf.parse(parts[dateColumn]);
 					}catch(ParseException e){
-						//e.printStackTrace();
+						System.err.println("Error while parsing crime.\nLINE="+line);
+						e.printStackTrace();
 						// Failed to parse date, return.
 						return;
 					}
 					millis = date.getTime();
-					System.out.println("RelevantColumns="+Arrays.toString(relevantWeatherColumns));
-					
 					
 					// We want to write all these columns for every of the 50 top terms
 					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
@@ -241,7 +242,7 @@ public class CalculateCorrelation {
 						if(!parts[columnNumber].isEmpty()){
 							for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
 								//System.out.printf("%s -> (%d,%s,%d)","t"+i+"w"+columnNumber,millis, DateTypeValue.weatherPrefix+columnNumber,i);
-								context.write(new Text("C"+crimeRanking+"W"+relevantWeatherColumnNames[weatherColumn]), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+								context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+crimeRanking), new DateTypeValue(millis,DateTypeValue.weatherPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
 							}
 						}
 					}
@@ -255,7 +256,7 @@ public class CalculateCorrelation {
 					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
 						columnNumber = relevantHealthColumns[healthColumn];
 						if(!parts[columnNumber].isEmpty()){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(Long.valueOf(parts[0]).longValue(),DateTypeValue.healthPrefix+columnNumber ,Float.valueOf(parts[columnNumber])));
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(Long.valueOf(parts[healthCommunityAreaColumn]).longValue(),DateTypeValue.healthPrefix+columnNumber ,Float.valueOf(parts[columnNumber])));
 						}
 					}
 					
@@ -269,7 +270,13 @@ public class CalculateCorrelation {
 					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
 						columnNumber = relevantEconomicColumns[economicColumn];
 						if(!parts[columnNumber].isEmpty()){
-							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue(Long.valueOf(parts[0]).longValue(),DateTypeValue.economyPrefix+columnNumber,Float.valueOf(parts[columnNumber])));
+							context.write(
+									new Text("E"+relevantEconomicColumnNames[economicColumn]),
+									new DateTypeValue(
+											Long.valueOf(parts[economicCommunityAreaColumn]).longValue(),
+											DateTypeValue.economyPrefix+columnNumber,
+											Float.valueOf(parts[columnNumber])
+									));
 						}
 					}
 					
@@ -286,28 +293,48 @@ public class CalculateCorrelation {
 		public Float y = null;
 		public boolean isComplete(){return x!=null && y!=null;}
 		@Override
-		public String toString(){return x.toString()+","+y.toString();}
+		public String toString(){
+			String buffer = "";
+			buffer += "(";
+			if(this.x == null){
+				buffer += "null";
+			}else{
+				buffer += x.toString();
+			}
+			buffer += ",";
+			if(this.y == null){
+				buffer += "null";
+			}else{
+				buffer += y.toString();
+			}
+			buffer += ")";
+			return buffer;
+		}
 	}
 	
 	public static class InitialReducer extends Reducer<Text, DateTypeValue, DoubleWritable, Text>{
 		
-		HashMap<Long, Point> dateMap = new HashMap<Long, Point>();
-		Collection<Point> goodPoints = new LinkedList<Point>();;
+		HashMap<Long, Point> dateMap = null;
+		Collection<Point> goodPoints = null;
 		
 		// We must align the dates
 		@Override
 		public void reduce(Text key, Iterable<DateTypeValue> values, Context context) throws IOException, InterruptedException{
 			
-			String type;
-			
 			int count = 0;
+			
+			dateMap = new HashMap<Long, Point>();
+			goodPoints = new LinkedList<Point>();
 			
 			for(DateTypeValue dtv : values){
 				count+=1;
-				type = dtv.getType().toString();
+				
+				if(key.toString().equals("E16+_UNEMPLOYED")){
+					System.out.println("--->"+dtv);
+				}
 				
 				// In this case we match by date
-				if(key.toString().startsWith("C")){
+				if(key.toString().startsWith("W")){
 					
 					if(!dateMap.containsKey(dtv.date.get())){
 						dateMap.put(dtv.date.get(),new Point());
@@ -321,18 +348,26 @@ public class CalculateCorrelation {
 					
 				}else if(key.toString().startsWith("H") || key.toString().startsWith("E")){
 					
-					if(!dateMap.containsKey(dtv.getDate().get())){
+					if(!dateMap.containsKey(dtv.date.get())){
 						dateMap.put(dtv.date.get(),new Point());
 					}
 					
 					if(dtv.isCrimeFrequency()){
-						//dateMap.get(dtv.date.get()).y = dtv.value.get();
-						Point p = new Point();
-						p.x = (float) dtv.date.get();
-						p.y = dtv.value.get();
-						goodPoints.add(p);
+						Float x = dateMap.get(dtv.date.get()).x;
+						if(x==null){
+							dateMap.get(dtv.date.get()).x = new Float(dtv.value.get());
+						}else{
+							dateMap.get(dtv.date.get()).x += dtv.value.get();
+						}
+						//dateMap.get(dtv.date.get()).x += dtv.value.get();
 					}else{
-						dateMap.get(dtv.date.get()).x = dtv.value.get();
+						Float y = dateMap.get(dtv.date.get()).y;
+						if(y==null){
+							dateMap.get(dtv.date.get()).y = new Float(dtv.value.get());
+						}else{
+							dateMap.get(dtv.date.get()).y += dtv.value.get();
+						}
+						//dateMap.get(dtv.date.get()).y = dtv.value.get();
 					}
 					
 				}
@@ -351,8 +386,9 @@ public class CalculateCorrelation {
 					goodPoints.add(p);
 					xArray.add(p.x);
 					yArray.add(p.y);
-					buffer += p.toString()+"|";
+					//buffer += p.toString()+"|";
 				}
+				
 			}
 			
 			System.out.println("For the key \""+key.toString()+"\" we have "+count+". The map has "+pointValues.size()+". Good Points "+goodPoints.size());
@@ -375,14 +411,15 @@ public class CalculateCorrelation {
 			
 			//System.out.printf("For %s, freq=%d, weather=%d\n",key, totalFrequencies,totalWeatherPoints);
 			//System.out.printf("For %s, good points=%d\n",key, totalGoodPoints);
-			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+buffer));
+			//context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+buffer));
+			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho));
 			
 		}
 		
 	}
 
 	public static void main(String[] args) throws Exception{
-		
+
 		/**
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

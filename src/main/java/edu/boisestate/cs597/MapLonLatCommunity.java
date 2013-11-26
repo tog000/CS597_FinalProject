@@ -2,7 +2,6 @@ package edu.boisestate.cs597;
 
 import java.awt.geom.Path2D;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;

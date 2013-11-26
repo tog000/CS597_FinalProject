@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -24,6 +24,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.boisestate.cs597.model.Crime;
 import edu.boisestate.cs597.util.GlobalFunctions;
+import edu.boisestate.cs597.util.GlobalFunctions.HashMapValueComparator;
 
 public class CrimesByDay {
 
@@ -50,21 +51,20 @@ public class CrimesByDay {
     public static class CrimesByDayReduce extends Reducer<Text, Crime, NullWritable, Crime> {
 
         private LinkedList<String> top50 = new LinkedList<>();
-        private final int NUM_CRIMES = 50;
         private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
         @Override
         public void setup(Context context) throws IOException, InterruptedException
         {
             top50 = GlobalFunctions.parseTop50(context.getConfiguration().get("top50"));
-            System.out.println("TOP 50 CRIMES="+top50.toString());
+            System.out.println("TOP "+TopCrimes.NUMBER_OF_CRIMES+" CRIMES="+top50.toString());
         }
 
         @Override
         public void reduce(Text date, Iterable<Crime> crimes, Context context) throws IOException, InterruptedException
         {
             Map<String, Integer> crimesPerDay = new HashMap<String, Integer>();
-            int[] freqVector = new int[NUM_CRIMES];
+            //int[] freqVector = new int[NUM_CRIMES];
 
             for (Crime crime : crimes)
             {
@@ -79,13 +79,23 @@ public class CrimesByDay {
                     crimesPerDay.put(iucr, ++count);
                 }
             }
+            
+            /*HashMapValueComparator hmvc = new HashMapValueComparator(crimesPerDay);
+            TreeMap<String,Integer> sorted_map = new TreeMap<String,Integer>(hmvc);
+            sorted_map.putAll(crimesPerDay);
+            
+            LinkedList<String> sortedKeys = new LinkedList<String>(sorted_map.keySet());
+            
+            System.out.println(sortedKeys.toString());*/
+            
             for (Entry<String, Integer> entry : crimesPerDay.entrySet())
             {
-                //freqVector[top50.indexOf(entry.getKey())] = entry.getValue();
                 Crime crimeFrequency = new Crime();
                 try {
 					crimeFrequency.setDate(sdf.parse(date.toString()));
 					crimeFrequency.setIUCR(entry.getKey());
+					crimeFrequency.setCrimeRanking(top50.indexOf(entry.getKey()));
+					
 					crimeFrequency.setFrequency(entry.getValue());
 
 					context.write(NullWritable.get(), crimeFrequency);
@@ -121,7 +131,7 @@ public class CrimesByDay {
 //        crimesByDay.setGroupingComparatorClass(DateComparator.CrimeDateGrouper.class);
 //        crimesByDay.setSortComparatorClass(DateComparator.CrimeDateComparator.class);
         
-        Path inputPath = new Path(options[1]+"*crime*");
+        // Path inputPath = new Path(options[1]+"*crime*");
 //        FileStatus[] fss = fs.listStatus(inputPath);
 //        for (FileStatus status : fss) {
 //			if(status.getPath().getName().contains("proteins")){
