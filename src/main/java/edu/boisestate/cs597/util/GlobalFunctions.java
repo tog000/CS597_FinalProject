@@ -44,7 +44,8 @@ public class GlobalFunctions {
 
     private static final Pattern csvPat = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
     private static final Pattern tsvPat = Pattern.compile("\\t");
-    private static final SimpleDateFormat chiCsvDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    //private static final SimpleDateFormat chiCsvDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+    private static final SimpleDateFormat chiCsvDate = new SimpleDateFormat("MM/dd/yyyy");
     private static Calendar cal = Calendar.getInstance();
 
     //returns crimes in descending order
@@ -154,6 +155,8 @@ public class GlobalFunctions {
                 {
                     c.communityArea = new IntWritable(Integer.valueOf(parts[13]));
                 }
+                
+                c.setFrequency(1);
 
                 if (!parts[19].isEmpty())
                 {
@@ -171,6 +174,9 @@ public class GlobalFunctions {
                         }
                     }
                 }
+                
+                c.setCrimeRanking(-1);
+
                 return c;
             }
             catch (ParseException | NumberFormatException e)
@@ -278,7 +284,7 @@ public class GlobalFunctions {
 
     public static Crime parseCrime(String line)
     {
-        String[] split = csvPat.split(line, -1);
+        String[] split = csvPat.split(line);
         Crime c = new Crime();
         try
         {
@@ -292,7 +298,8 @@ public class GlobalFunctions {
             c.setLon(new DoubleWritable(Double.parseDouble(split[7])));
             c.setLat(new DoubleWritable(Double.parseDouble(split[8])));
             // Crime now also has a rating
-            c.setCrimeRanking(Integer.valueOf(split[9].trim()));
+            c.setCrimeRanking(Integer.parseInt(split[9].trim()));
+            
             return c;
         }
         catch (NumberFormatException e)
@@ -325,6 +332,20 @@ public class GlobalFunctions {
 			Integer freq2 = base.get(key1);
 			return freq2.compareTo(freq1);
 		}
+    }
+    
+    public static void main(String args[]){
+    	String test = "1077562800000,"
+    			+ "2825,019XX S HALSTED ST,"
+    			+ "SMALL RETAIL STORE,"
+    			+ "false,"
+    			+ "31,"
+    			+ "1,"
+    			+ "-87.64673365029928,"
+    			+ "41.855730164469,"
+    			+ "1              ";
+    	Crime c = GlobalFunctions.parseCrime(test);
+    	System.out.println(c);
     }
     
 }

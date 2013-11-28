@@ -48,65 +48,40 @@ public class CalculateCorrelation {
 		//
 		private static int dateColumn = 2;
 
-		private static int[] relevantWeatherColumns = {2,3,4,5,6,7};
-		private static String[] relevantWeatherColumnNames = {"PRCP","SNWD","SNOW","TMAX","TMIN","AWND"};
+		private static int[] relevantWeatherColumns = {21,22,23,27,20,18};
+		private static String[] relevantWeatherColumnNames = {"TSUN","TMAX","TMIN","AWND","SNOW","PRCP"};
 		
 		/*
 		
 		0 STATION
 		1 STATION_NAME
 		2 DATE
-		3 MXPN
-		4 MNPN
-		5 EVAP
-		6 MDEV
-		7 DAEV
-		8 SX32
-		9 SX52
-		10 SX53
-		11 SN32
-		12 SN52
-		13 SN53
-		14 MDPR
-		15 MDSF
-		16 DAPR
-		17 DASF
-		18 PRCP
-		19 SNWD
-		20 SNOW
-		21 TSUN
-		22 TMAX
-		23 TMIN
-		24 TOBS
-		25 WESD
-		26 WESF
-		27 AWND
+		3 MXPN Daily maximum temperature of water in an evaporation pan (tenths of degrees C)
+		4 MNPN Daily minimum temperature of water in an evaporation pan (tenths of degrees C)
+		5 EVAP Evaporation of water from evaporation pan (tenths of mm)
+		6 MDEV Multiday evaporation total (tenths of mm; use with DAEV)
+		7 DAEV Number of days included in the multiday evaporation total (MDEV)
+		8 SX32 Maximum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+		9 SX52 Maximum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+		10 SX53 Maximum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+		11 SN32 Minimum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
+		12 SN52 Minimum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
+		13 SN53 Minimum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
+		14 MDPR Multiday precipitation total (tenths of mm; use with DAPR and DWPR, if available)
+		15 MDSF Multiday snowfall total
+		16 DAPR Number of days included in the multiday precipitation total (MDPR)
+		17 DASF Number of days included in the multiday snow fall total (MDSF)
+		18 PRCP Precipitation (tenths of mm)
+		19 SNWD Snow depth (mm)
+		20 SNOW Snowfall (mm)
+		21 TSUN Daily total sunshine (minutes)
+		22 TMAX Maximum temperature (tenths of degrees C)
+		23 TMIN Minimum temperature (tenths of degrees C)
+		24 TOBS Temperature at the time of observation (tenths of degrees C)
+		25 WESD Water equivalent of snow on the ground (tenths of mm)
+		26 WESF Water equivalent of snowfall (tenths of mm)
+		27 AWND Average daily wind speed (tenths of meters per second)
 		
-		SN32 - Minimum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
-		DAPR - Number of days included in the multiday precipitation total (MDPR)
-		AWND - Average daily wind speed (tenths of meters per second)
-		DASF - Number of days included in the multiday snow fall total (MDSF) 
-		SNOW - Snowfall (mm)
-		MXPN - Daily maximum temperature of water in an evaporation pan (tenths of degrees C)
-		TMIN - Minimum temperature (tenths of degrees C)
-		WESF - Water equivalent of snowfall (tenths of mm)
-		WESD - Water equivalent of snow on the ground (tenths of mm)
-		TMAX - Maximum temperature (tenths of degrees C)
-		MDEV - Multiday evaporation total (tenths of mm; use with DAEV)
-		SNWD - Snow depth (mm)
-		MNPN - Daily minimum temperature of water in an evaporation pan (tenths of degrees C)
-		MDPR - Multiday precipitation total (tenths of mm; use with DAPR and DWPR, if available)
-		EVAP - Evaporation of water from evaporation pan (tenths of mm)
-		PRCP - Precipitation (tenths of mm)
-		DAEV - Number of days included in the multiday evaporation total (MDEV)
-		SX52 - Maximum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
-		SN53 - Minimum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
-		TSUN - Daily total sunshine (minutes)
-		SX53 - Maximum soil temperature (tenths of degrees C) with sod cover at 20 cm depth
-		SN52 - Minimum soil temperature (tenths of degrees C) with sod cover at 10 cm depth
-		SX32 - Maximum soil temperature (tenths of degrees C) with bare ground cover at 10 cm depth
-		TOBS - Temperature at the time of observation (tenths of degrees C)
-		MDSF - Multiday snowfall total
 		*/
 		
 		//
@@ -202,6 +177,8 @@ public class CalculateCorrelation {
 				case CRIME_FILE:
 					Crime c = GlobalFunctions.parseCrime(line.toString());
 					millis = c.getDate().get();
+					
+					System.out.printf("Read a new crime with RANKING:%s and COMMA=%s\n",c.getCrimeRanking(),c.getCommunityArea());
 					
 					// One for every potential weather indicator
 					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
@@ -329,9 +306,11 @@ public class CalculateCorrelation {
 			for(DateTypeValue dtv : values){
 				count+=1;
 				
-				if(key.toString().equals("E16+_UNEMPLOYED")){
+				
+				/*if(key.toString().equals("WAWNDC1")){
 					System.out.println("--->"+dtv);
-				}
+				}*/
+				
 				
 				// In this case we match by date
 				if(key.toString().startsWith("W")){
@@ -405,6 +384,11 @@ public class CalculateCorrelation {
 			
 			double rho = 0;
 			
+//			if(key.toString().equals("WAWNDC1")){
+//				System.out.println("x Primitive:"+Arrays.toString(xPrimitive));
+//				System.out.println("y Primitive:"+Arrays.toString(yPrimitive));
+//			}
+			
 			if(xPrimitive.length > 1 && yPrimitive.length > 1){
 				rho = sc.correlation(xPrimitive, yPrimitive);
 			}
@@ -420,6 +404,9 @@ public class CalculateCorrelation {
 
 	public static void main(String[] args) throws Exception{
 
+		//System.out.printf("[%d]",Integer.parseInt("42          ".trim()));
+		//System.exit(1);
+		
 		/**
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

@@ -6,12 +6,20 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
+/**
+ * @author tog
+ *
+ */
 public class App 
 {
 	
@@ -61,6 +69,79 @@ public class App
     	}
 	}
 	
+	/**
+	 * 
+	 * @param Crime file
+	 * @param Weather File
+	 * @throws ParseException 
+	 */
+	public void getWeatherForCrime(String file1,String file2) throws ParseException{
+		Charset charset = Charset.forName("UTF8");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		
+		// Create a list of dates
+		LinkedList<Date> dates = new LinkedList<Date>();
+    	try (BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("data", file1), charset)) {
+    	    String line;
+    	    // Consume the header
+    	    reader.readLine();
+    	    while ((line = reader.readLine()) != null) {
+    	    	
+    	    	Date d = sdf.parse(line.split(",")[2]);
+    	    	
+    	    	dates.add(d);
+    	    	
+    	    }
+    	} catch (IOException x) {
+    	    System.err.format("IOException: %s%n", x);
+    	}
+    	
+    	sdf = new SimpleDateFormat("yyyyMMdd");
+    	try (BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("data", file2), charset)) {
+    	    String line;
+    	    // Consume the header
+    	    reader.readLine();
+    	    while ((line = reader.readLine()) != null) {
+    	    	
+    	    	Date d = sdf.parse(line.split(",")[2]);
+    	    	
+    	    	if(dates.indexOf(d) != -1){
+    	    		System.out.println(line);
+    	    	}
+    	    	
+    	    }
+    	} catch (IOException x) {
+    	    System.err.format("IOException: %s%n", x);
+    	}
+    	
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @param filter
+	 * @throws ParseException
+	 */
+	public void getWeatherFromStation(String file,String filter) throws ParseException{
+		Charset charset = Charset.forName("UTF8");
+		
+		// Create a list of dates
+		LinkedList<Date> dates = new LinkedList<Date>(); 
+    	try (BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("data", file), charset)) {
+    	    String line;
+    	    // Consume the header
+    	    reader.readLine();
+    	    while ((line = reader.readLine()) != null) {
+    	    	
+    	    	if(line.split(",")[0].equals(filter)){
+    	    		System.out.println(line);
+    	    	}
+    	    }
+    	} catch (IOException x) {
+    	    System.err.format("IOException: %s%n", x);
+    	}
+	}
+	
 	public void getRequestFrequencies(String file){
 		Charset charset = Charset.forName("UTF8");
 		HashMap<String, Integer> hmap = new HashMap<String, Integer>(); 
@@ -97,13 +178,14 @@ public class App
 	}
 	
 	
-    public static void main( String[] args ) throws FileNotFoundException
+    public static void main( String[] args ) throws FileNotFoundException, ParseException
     {
         App app = new App();
         //app.extractRequest("dead animal pickup");
         //app.subsampleDataset("311nyc_2010-present.csv",1000);
-        app.getRequestFrequencies("subsampled.csv");
-        
+        //app.getRequestFrequencies("subsampled.csv");
+        app.getWeatherForCrime("crime_chicago.csv","weather_chicago_airport.csv");
+        //app.getWeatherFromStation("weather_chicago.csv","GHCND:USW00014819");
     }
 }
 

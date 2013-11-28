@@ -29,15 +29,17 @@ import edu.boisestate.cs597.util.GlobalFunctions.HashMapValueComparator;
 public class CrimesByDay {
 
     public static class CrimesByDayMap extends Mapper<LongWritable, Text, Text, Crime> {
+    //public static class CrimesByDayMap extends Mapper<LongWritable, Crime, Text, Crime> {
 
         @Override
         public void map(LongWritable byteOffset, Text lineFromFile, Context context) throws IOException, InterruptedException
+        //public void map(LongWritable byteOffset, Crime c, Context context) throws IOException, InterruptedException
         {
             Crime c = GlobalFunctions.parseCrime(lineFromFile.toString());
             try
             {
                 context.write(new Text(GlobalFunctions.getMDYfromMillis(c.getDate().get())), c.clone());
-                System.out.println(GlobalFunctions.getMDYfromMillis(c.getDate().get()) + " " + (c.clone()).toString());
+                //System.out.println(GlobalFunctions.getMDYfromMillis(c.getDate().get()) + " " + (c.clone()).toString());
             }
             catch (CloneNotSupportedException | NullPointerException e)
             {
@@ -63,21 +65,21 @@ public class CrimesByDay {
         @Override
         public void reduce(Text date, Iterable<Crime> crimes, Context context) throws IOException, InterruptedException
         {
-            Map<String, Integer> crimesPerDay = new HashMap<String, Integer>();
+            Map<String, LinkedList<Crime>> crimesPerDay = new HashMap<String, LinkedList<Crime>>();
             //int[] freqVector = new int[NUM_CRIMES];
 
-            for (Crime crime : crimes)
-            {
+            for (Crime crime : crimes){
                 String iucr = crime.getIUCR().toString();
-                if (crimesPerDay.get(iucr) == null && top50.contains(iucr))
-                {
-                    crimesPerDay.put(iucr, 1);
+                
+                if(top50.contains(iucr)){
+                	
+	                if (crimesPerDay.get(iucr) == null){
+	                    crimesPerDay.put(iucr, new LinkedList<Crime>());
+	                }
+	                
+	                crimesPerDay.get(iucr).add(crime);
                 }
-                else if (top50.contains(iucr))
-                {
-                    Integer count = crimesPerDay.get(iucr);
-                    crimesPerDay.put(iucr, ++count);
-                }
+                
             }
             
             /*HashMapValueComparator hmvc = new HashMapValueComparator(crimesPerDay);
@@ -88,13 +90,29 @@ public class CrimesByDay {
             
             System.out.println(sortedKeys.toString());*/
             
-            for (Entry<String, Integer> entry : crimesPerDay.entrySet())
+            for (Entry<String, LinkedList<Crime>> entry : crimesPerDay.entrySet())
             {
-                Crime crimeFrequency = new Crime();
+            	Integer total = 0;
+            	
+            	for(Crime c : entry.getValue()){
+            		total += c.getFrequency().get();
+            		c.setCrimeRanking(top50.indexOf(entry.getKey()));
+            	}
+            	
+            	Crime first = entry.getValue().get(0);
+            	first.setFrequency(total);
+            	context.write(NullWritable.get(), first);
+            	
+            	/*
+            	context.write(NullWritable.get(), crimeFrequency);
+            	
                 try {
 					crimeFrequency.setDate(sdf.parse(date.toString()));
 					crimeFrequency.setIUCR(entry.getKey());
-					crimeFrequency.setCrimeRanking(top50.indexOf(entry.getKey()));
+					
+					//System.out.printf("Searching for %s in %s = %d\n",entry.getKey(),top50.toString(),top50.indexOf(entry.getKey()));
+					
+					crimeFrequency.setCrimeRanking();
 					
 					crimeFrequency.setFrequency(entry.getValue());
 
@@ -102,7 +120,7 @@ public class CrimesByDay {
 					
 				} catch (ParseException e) {
 					e.printStackTrace();
-				}
+				}*/
             }
             //context.write(new Text(date), new Text(Arrays.toString(freqVector)));
         }
