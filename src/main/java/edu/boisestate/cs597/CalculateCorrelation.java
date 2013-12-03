@@ -410,7 +410,7 @@ public class CalculateCorrelation {
 			//System.out.printf("For %s, freq=%d, weather=%d\n",key, totalFrequencies,totalWeatherPoints);
 			//System.out.printf("For %s, good points=%d\n",key, totalGoodPoints);
 			//context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+buffer));
-			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+));		
+			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"));		
 			
 		}
 		
