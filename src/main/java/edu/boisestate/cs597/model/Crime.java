@@ -15,6 +15,7 @@ import org.apache.hadoop.io.WritableComparable;
 public class Crime implements WritableComparable<Crime>, Cloneable {
 	public LongWritable date;
 	public Text IUCR;
+	public Text crimeDescription;
 	public Text block;
 	public Text locationDescription;
 	public BooleanWritable arrest;
@@ -27,6 +28,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	public Crime() {
 		date = new LongWritable();
 		IUCR = new Text();
+		crimeDescription = new Text();
 		block = new Text();
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
@@ -40,6 +42,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	public void readFields(DataInput dataInput) throws IOException {
 		date = new LongWritable();
 		IUCR = new Text();
+		crimeDescription = new Text();
 		block = new Text();
 		locationDescription = new Text();
 		arrest = new BooleanWritable();
@@ -51,6 +54,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 		date.readFields(dataInput);
 		IUCR.readFields(dataInput);
+		crimeDescription.readFields(dataInput);
 		block.readFields(dataInput);
 		locationDescription.readFields(dataInput);
 		arrest.readFields(dataInput);
@@ -64,6 +68,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 	public void write(DataOutput dataOutput) throws IOException {
 		date.write(dataOutput);
 		IUCR.write(dataOutput);
+		crimeDescription.write(dataOutput);
 		block.write(dataOutput);
 		locationDescription.write(dataOutput);
 		arrest.write(dataOutput);
@@ -82,7 +87,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 	@Override
 	public String toString() {
-		return date + "," + IUCR + "," + block + "," + locationDescription + ","
+		return date + "," + IUCR + "," + crimeDescription + "," + block + "," + locationDescription + ","
 				+ arrest + "," + communityArea + "," + frequency + "," + lon + "," + lat + "," + crimeRanking + "\t";
 	}
 
@@ -92,6 +97,7 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 		c.date = new LongWritable(this.date.get());
 		c.IUCR = new Text(this.IUCR.toString());
+		c.crimeDescription = new Text(this.crimeDescription.toString());
 		c.block = new Text(this.block.toString());
 		c.locationDescription = new Text(this.locationDescription.toString());
 		c.arrest = new BooleanWritable(this.arrest.get());
@@ -103,8 +109,20 @@ public class Crime implements WritableComparable<Crime>, Cloneable {
 
 		return c;
 	}
+	
+    public Text getCrimeDescription() {
+		return crimeDescription;
+	}
 
-    public IntWritable getFrequency() {
+	public void setCrimeDescription(String crimeDescription) {
+		this.crimeDescription = new Text(crimeDescription);
+	}
+	
+	public void setCrimeDescription(Text crimeDescription) {
+		this.crimeDescription = crimeDescription;
+	}
+
+	public IntWritable getFrequency() {
 		return frequency;
 	}
 

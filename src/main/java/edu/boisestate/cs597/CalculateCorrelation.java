@@ -388,7 +388,7 @@ public class CalculateCorrelation {
 				
 			}
 			
-			System.out.println("For the key \""+key.toString()+"\" we have "+count+". The map has "+pointValues.size()+". Good Points "+goodPoints.size());
+			//System.out.println("For the key \""+key.toString()+"\" we have "+count+". The map has "+pointValues.size()+". Good Points "+goodPoints.size());
 			
 			double xPrimitive[] = new double[xArray.size()];
 			double yPrimitive[] = new double[yArray.size()];
@@ -410,7 +410,7 @@ public class CalculateCorrelation {
 			//System.out.printf("For %s, freq=%d, weather=%d\n",key, totalFrequencies,totalWeatherPoints);
 			//System.out.printf("For %s, good points=%d\n",key, totalGoodPoints);
 			//context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+buffer));
-			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho));		
+			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+));		
 			
 		}
 		
@@ -479,6 +479,7 @@ public class CalculateCorrelation {
 		if(fs.exists(outputPath)){
 	    	fs.delete(outputPath,true);
 	    }
+		//fs.deleteOnExit(outputPath);
 		
         FileOutputFormat.setOutputPath(correlationJob, outputPath);
         

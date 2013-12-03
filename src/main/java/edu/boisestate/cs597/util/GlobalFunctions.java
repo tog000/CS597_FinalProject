@@ -144,7 +144,9 @@ public class GlobalFunctions {
 
                 c.block = new Text(parts[3]);
 
-                c.IUCR = new Text(parts[5]+" "+parts[6]);
+                c.IUCR = new Text(parts[4]);
+                
+                c.crimeDescription = new Text(parts[5]+" "+parts[6]);
 
                 c.locationDescription = new Text(parts[7]);
 
@@ -290,15 +292,16 @@ public class GlobalFunctions {
         {
             c.setDate(new LongWritable(Long.parseLong(split[0])));
             c.setIUCR(new Text(split[1]));
-            c.setBlock(new Text(split[2]));
-            c.setLocationDescription(new Text(split[3]));
-            c.setArrest(new BooleanWritable(Boolean.parseBoolean(split[4])));
-            c.setCommunityArea(new IntWritable(Integer.parseInt(split[5])));
-            c.setFrequency(new IntWritable(Integer.parseInt(split[6])));
-            c.setLon(new DoubleWritable(Double.parseDouble(split[7])));
-            c.setLat(new DoubleWritable(Double.parseDouble(split[8])));
+            c.setCrimeDescription(new Text(split[2]));
+            c.setBlock(new Text(split[3]));
+            c.setLocationDescription(new Text(split[4]));
+            c.setArrest(new BooleanWritable(Boolean.parseBoolean(split[5])));
+            c.setCommunityArea(new IntWritable(Integer.parseInt(split[6])));
+            c.setFrequency(new IntWritable(Integer.parseInt(split[7])));
+            c.setLon(new DoubleWritable(Double.parseDouble(split[8])));
+            c.setLat(new DoubleWritable(Double.parseDouble(split[9])));
             // Crime now also has a rating
-            c.setCrimeRanking(Integer.parseInt(split[9].trim()));
+            c.setCrimeRanking(Integer.parseInt(split[10].trim()));
             
             return c;
         }
