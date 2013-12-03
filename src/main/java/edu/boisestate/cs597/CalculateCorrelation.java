@@ -3,7 +3,6 @@ package edu.boisestate.cs597;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +21,9 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.boisestate.cs597.model.Crime;
@@ -49,7 +51,7 @@ public class CalculateCorrelation {
 		private static int dateColumn = 2;
 
 		private static int[] relevantWeatherColumns = {21,22,23,27,20,18};
-		private static String[] relevantWeatherColumnNames = {"TSUN","TMAX","TMIN","AWND","SNOW","PRCP"};
+		private static String[] relevantWeatherColumnNames = {"DAILY_SUNSHINE","TEMP_MAX","TEMP_MIN","WIND_SPEED","SNOW","PRCP"};
 		
 		/*
 		
@@ -126,7 +128,7 @@ public class CalculateCorrelation {
 		
 		private static int economicCommunityAreaColumn = 0;
 		private static int[] relevantEconomicColumns = {2,3,4,5,6};
-		private static String[] relevantEconomicColumnNames = {"CROWDED","BELOW_POVERTY","16+_UNEMPLOYED","25+_NO_HIGHSCHOOL","YOUR_OR_OLDER"};
+		private static String[] relevantEconomicColumnNames = {"CROWDED","BELOW_POVERTY","16_UNEMPLOYED","25_NO_HIGHSCHOOL","YOUNG_OR_OLDER"};
 		
 		/*
 		0 Community Area Number
@@ -162,6 +164,7 @@ public class CalculateCorrelation {
 				fileType = FILE_TYPE.CRIME_FILE;
 				sdf = new SimpleDateFormat("MM/dd/yyyy");
 			}
+			
 		}
 		
 		@Override
@@ -187,12 +190,12 @@ public class CalculateCorrelation {
 					
 					// One for every health column. The "Date" is the community area
 					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
-						context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+						context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+c.getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
 					}
 					
 					// One for every economic column. The "Date" is the community area
 					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
-						context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+						context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+c.getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
 					}
 					
 				break;
@@ -233,7 +236,14 @@ public class CalculateCorrelation {
 					for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
 						columnNumber = relevantHealthColumns[healthColumn];
 						if(!parts[columnNumber].isEmpty()){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]), new DateTypeValue(Long.valueOf(parts[healthCommunityAreaColumn]).longValue(),DateTypeValue.healthPrefix+columnNumber ,Float.valueOf(parts[columnNumber])));
+							for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
+								context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+crimeRanking), 
+										new DateTypeValue(
+												Long.valueOf(parts[healthCommunityAreaColumn]).longValue(),
+												DateTypeValue.healthPrefix+columnNumber,
+												Float.valueOf(parts[columnNumber])
+												));
+							}
 						}
 					}
 					
@@ -247,13 +257,15 @@ public class CalculateCorrelation {
 					for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
 						columnNumber = relevantEconomicColumns[economicColumn];
 						if(!parts[columnNumber].isEmpty()){
-							context.write(
-									new Text("E"+relevantEconomicColumnNames[economicColumn]),
-									new DateTypeValue(
-											Long.valueOf(parts[economicCommunityAreaColumn]).longValue(),
-											DateTypeValue.economyPrefix+columnNumber,
-											Float.valueOf(parts[columnNumber])
+							for(byte crimeRanking=1;crimeRanking<=TopCrimes.NUMBER_OF_CRIMES;crimeRanking++){
+								context.write(
+										new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+crimeRanking),
+										new DateTypeValue(
+												Long.valueOf(parts[economicCommunityAreaColumn]).longValue(),
+												DateTypeValue.economyPrefix+columnNumber,
+												Float.valueOf(parts[columnNumber])
 									));
+							}
 						}
 					}
 					
@@ -291,8 +303,15 @@ public class CalculateCorrelation {
 	
 	public static class InitialReducer extends Reducer<Text, DateTypeValue, DoubleWritable, Text>{
 		
-		HashMap<Long, Point> dateMap = null;
-		Collection<Point> goodPoints = null;
+		private HashMap<Long, Point> dateMap = null;
+		private Collection<Point> goodPoints = null;
+		private MultipleOutputs<DoubleWritable, Text> mos;
+		
+		@Override
+		public void setup(Context context){
+			mos = new MultipleOutputs<DoubleWritable, Text>(context);
+		}
+		
 		
 		// We must align the dates
 		@Override
@@ -338,15 +357,13 @@ public class CalculateCorrelation {
 						}else{
 							dateMap.get(dtv.date.get()).x += dtv.value.get();
 						}
-						//dateMap.get(dtv.date.get()).x += dtv.value.get();
 					}else{
 						Float y = dateMap.get(dtv.date.get()).y;
 						if(y==null){
 							dateMap.get(dtv.date.get()).y = new Float(dtv.value.get());
 						}else{
-							dateMap.get(dtv.date.get()).y += dtv.value.get();
+							//dateMap.get(dtv.date.get()).y += dtv.value.get();
 						}
-						//dateMap.get(dtv.date.get()).y = dtv.value.get();
 					}
 					
 				}
@@ -365,6 +382,7 @@ public class CalculateCorrelation {
 					goodPoints.add(p);
 					xArray.add(p.x);
 					yArray.add(p.y);
+					mos.write(new DoubleWritable(goodPoints.size()), new Text(p.x+"\t"+p.y), "scatter_"+key.toString());
 					//buffer += p.toString()+"|";
 				}
 				
@@ -384,10 +402,6 @@ public class CalculateCorrelation {
 			
 			double rho = 0;
 			
-//			if(key.toString().equals("WAWNDC1")){
-//				System.out.println("x Primitive:"+Arrays.toString(xPrimitive));
-//				System.out.println("y Primitive:"+Arrays.toString(yPrimitive));
-//			}
 			
 			if(xPrimitive.length > 1 && yPrimitive.length > 1){
 				rho = sc.correlation(xPrimitive, yPrimitive);
@@ -396,8 +410,12 @@ public class CalculateCorrelation {
 			//System.out.printf("For %s, freq=%d, weather=%d\n",key, totalFrequencies,totalWeatherPoints);
 			//System.out.printf("For %s, good points=%d\n",key, totalGoodPoints);
 			//context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho+"\t"+buffer));
-			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho));
+			context.write(new DoubleWritable(Math.abs(rho)), new Text(key.toString()+"\t"+rho));		
 			
+		}
+		
+		public void cleanup(Context context) throws IOException, InterruptedException {
+			mos.close();
 		}
 		
 	}
@@ -436,6 +454,11 @@ public class CalculateCorrelation {
         correlationJob.setReducerClass(InitialReducer.class);
         
         correlationJob.setJobName("Correlate Weather and Demographics to Daily Crime Frequencies");
+        
+        
+        // Save the raw points for visualization
+        //MultipleOutputs.addNamedOutput(correlationJob, "scatter", TextOutputFormat.class, Text.class, NullWritable.class);
+        LazyOutputFormat.setOutputFormatClass(correlationJob, TextOutputFormat.class);
         
         correlationJob.setMapOutputKeyClass(Text.class);
         correlationJob.setMapOutputValueClass(DateTypeValue.class);

@@ -144,7 +144,7 @@ public class GlobalFunctions {
 
                 c.block = new Text(parts[3]);
 
-                c.IUCR = new Text(parts[4]);
+                c.IUCR = new Text(parts[5]+" "+parts[6]);
 
                 c.locationDescription = new Text(parts[7]);
 
