@@ -339,7 +339,9 @@ public class CalculateCorrelation {
 					}
 					
 					if(dtv.isWeather()){
-						dateMap.get(dtv.date.get()).y = dtv.value.get();
+						if(dtv.value.get() != -9999f){
+							dateMap.get(dtv.date.get()).y = dtv.value.get();
+						}
 					}else{
 						dateMap.get(dtv.date.get()).x = dtv.value.get();
 					}
@@ -355,7 +357,7 @@ public class CalculateCorrelation {
 						if(x==null){
 							dateMap.get(dtv.date.get()).x = new Float(dtv.value.get());
 						}else{
-							dateMap.get(dtv.date.get()).x += dtv.value.get();
+							dateMap.get(dtv.date.get()).x = new Float(dateMap.get(dtv.date.get()).x+dtv.value.get());
 						}
 					}else{
 						Float y = dateMap.get(dtv.date.get()).y;
