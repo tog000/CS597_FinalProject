@@ -354,7 +354,8 @@ public class CalculateCorrelation {
 							dateMap.get(dtv.date.get()).y = dtv.value.get();
 						}
 					}else{
-						dateMap.get(dtv.date.get()).x = dtv.value.get();
+						float f = dtv.value.get();
+						dateMap.get(dtv.date.get()).x = f;
 					}
 					
 				}else if(key.toString().startsWith("H") || key.toString().startsWith("E")){
