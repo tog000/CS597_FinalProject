@@ -322,9 +322,20 @@ public class CalculateCorrelation {
 			dateMap = new HashMap<Long, Point>();
 			goodPoints = new LinkedList<Point>();
 			
-			for(DateTypeValue dtv : values){
+			for(DateTypeValue badDtv : values){
 				count+=1;
 				
+				DateTypeValue dtv = null;
+				
+				try {
+					dtv = badDtv.clone();
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+				
+				if(dtv==null){
+					continue;
+				}
 				
 				/*if(key.toString().equals("WAWNDC1")){
 					System.out.println("--->"+dtv);
