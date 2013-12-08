@@ -28,5 +28,6 @@ else
 	echo "************ CALCULATE CORRELATION BETWEEN WEATHER, SOCIOECONOMIC, HEALTH and CRIME ************"
 	#hadoop jar target/finalproject-1.0-SNAPSHOT.jar edu.boisestate.cs597.CalculateCorrelation $1/weather* $1/health* $1/economy* correlation output
 	hadoop jar target/finalproject-1.0-SNAPSHOT-jar-with-dependencies.jar edu.boisestate.cs597.CalculateCorrelation $1/weather* $1/health* $1/economy* correlation $2
-	hadoop fs -cat output/part* > output.txt
+	hadoop fs -cat $2/part* > output.txt
+	sort -t$'\t' -k1 -nr output.txt > sorted_output.txt
 fi
