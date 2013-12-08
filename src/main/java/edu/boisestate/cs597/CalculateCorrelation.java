@@ -185,7 +185,13 @@ public class CalculateCorrelation {
 					
 					// One for every potential weather indicator
 					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
-						context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
+						
+						try {
+							context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.clone().getFrequency().get()));
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+						}
+						
 					}
 					
 					// One for every health column. The "Date" is the community area
@@ -354,8 +360,12 @@ public class CalculateCorrelation {
 							dateMap.get(dtv.date.get()).y = dtv.value.get();
 						}
 					}else{
-						float f = dtv.value.get();
-						dateMap.get(dtv.date.get()).x = f;
+						Float x = dateMap.get(dtv.date.get()).x;
+						if(x==null){
+							dateMap.get(dtv.date.get()).x = 1f;
+						}else{
+							dateMap.get(dtv.date.get()).x += 1f;
+						}
 					}
 					
 				}else if(key.toString().startsWith("H") || key.toString().startsWith("E")){
