@@ -366,7 +366,7 @@ public class CalculateCorrelation {
 					if(dtv.isCrimeFrequency()){
 						Float x = dateMap.get(dtv.date.get()).x;
 						if(x==null){
-							dateMap.get(dtv.date.get()).x = 1000f;
+							dateMap.get(dtv.date.get()).x = 1f;
 						}else{
 							dateMap.get(dtv.date.get()).x += 1f;
 						}
