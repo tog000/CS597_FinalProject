@@ -35,16 +35,8 @@
 				map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 				var ctaLayer = new google.maps.KmlLayer({
-					url: 'http://tog000.com.ar/Kmlcommunityareas.kml'
+					url: 'http://rtcodez.com/community_areas_health_ind4.kml'
 				});
-
-				new google.maps.Marker({
-					position: new google.maps.LatLng(41.99075, -87.68182),
-					map: map,
-					title: "CRIME 1"
-				});
-
-
 				ctaLayer.setMap(map);
 
 			}
