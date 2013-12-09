@@ -13,6 +13,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -181,22 +182,22 @@ public class CalculateCorrelation {
 					Crime c = GlobalFunctions.parseCrime(line.toString());
 					millis = c.getDate().get();
 					
-					System.out.printf("Read a new crime with RANKING:%s and COMMA=%s\n",c.getCrimeRanking(),c.getCommunityArea());
+					//System.out.printf("Read a new crime with RANKING:%s and COMMA=%s\n",c.getCrimeRanking(),c.getCommunityArea());
 					
 					try {
 						// One for every potential weather indicator
 						for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
-								context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.clone().getFrequency().get()));					
+							context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, 1f));
 						}
 						
 						// One for every health column. The "Date" is the community area
 						for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, 1f));
 						}
 						
 						// One for every economic column. The "Date" is the community area
 						for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
-							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.getFrequency().get()));
+							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, 1f));
 						}
 					} catch (CloneNotSupportedException e) {
 						e.printStackTrace();
