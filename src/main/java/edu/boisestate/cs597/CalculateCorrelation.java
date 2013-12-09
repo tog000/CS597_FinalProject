@@ -187,17 +187,17 @@ public class CalculateCorrelation {
 					try {
 						// One for every potential weather indicator
 						for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
-							context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, 1f));
+							context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.clone().getFrequency().get()));
 						}
 						
 						// One for every health column. The "Date" is the community area
 						for(int healthColumn=0;healthColumn<relevantHealthColumns.length;healthColumn++){
-							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, 1f));
+							context.write(new Text("H"+relevantHealthColumnNames[healthColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.clone().getFrequency().get()));
 						}
 						
 						// One for every economic column. The "Date" is the community area
 						for(int economicColumn=0;economicColumn<relevantEconomicColumns.length;economicColumn++){
-							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, 1f));
+							context.write(new Text("E"+relevantEconomicColumnNames[economicColumn]+"C"+c.clone().getCrimeRanking()), new DateTypeValue((long)c.getCommunityArea().get(), DateTypeValue.top50Prefix, c.clone().getFrequency().get()));
 						}
 					} catch (CloneNotSupportedException e) {
 						e.printStackTrace();
