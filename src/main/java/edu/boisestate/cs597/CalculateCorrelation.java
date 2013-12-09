@@ -185,7 +185,13 @@ public class CalculateCorrelation {
 					
 					// One for every potential weather indicator
 					for(int weatherColumn=0;weatherColumn<relevantWeatherColumns.length;weatherColumn++){
-						context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.getFrequency().get()));
+						
+						try {
+							context.write(new Text("W"+relevantWeatherColumnNames[weatherColumn]+"C"+c.getCrimeRanking()), new DateTypeValue(millis, DateTypeValue.top50Prefix, c.clone().getFrequency().get()));
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+						}
+						
 					}
 					
 					// One for every health column. The "Date" is the community area
@@ -322,9 +328,20 @@ public class CalculateCorrelation {
 			dateMap = new HashMap<Long, Point>();
 			goodPoints = new LinkedList<Point>();
 			
-			for(DateTypeValue dtv : values){
+			for(DateTypeValue badDtv : values){
 				count+=1;
 				
+				DateTypeValue dtv = null;
+				
+				try {
+					dtv = badDtv.clone();
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+				
+				if(dtv==null){
+					continue;
+				}
 				
 				/*if(key.toString().equals("WAWNDC1")){
 					System.out.println("--->"+dtv);
@@ -343,7 +360,12 @@ public class CalculateCorrelation {
 							dateMap.get(dtv.date.get()).y = dtv.value.get();
 						}
 					}else{
-						dateMap.get(dtv.date.get()).x = dtv.value.get();
+						Float x = dateMap.get(dtv.date.get()).x;
+						if(x==null){
+							dateMap.get(dtv.date.get()).x = 1f;
+						}else{
+							dateMap.get(dtv.date.get()).x += 1f;
+						}
 					}
 					
 				}else if(key.toString().startsWith("H") || key.toString().startsWith("E")){
@@ -355,9 +377,9 @@ public class CalculateCorrelation {
 					if(dtv.isCrimeFrequency()){
 						Float x = dateMap.get(dtv.date.get()).x;
 						if(x==null){
-							dateMap.get(dtv.date.get()).x = new Float(dtv.value.get());
+							dateMap.get(dtv.date.get()).x = 1f;
 						}else{
-							dateMap.get(dtv.date.get()).x = new Float(dateMap.get(dtv.date.get()).x+dtv.value.get());
+							dateMap.get(dtv.date.get()).x += 1f;
 						}
 					}else{
 						Float y = dateMap.get(dtv.date.get()).y;

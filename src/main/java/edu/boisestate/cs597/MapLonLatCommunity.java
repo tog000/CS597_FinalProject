@@ -64,6 +64,8 @@ public class MapLonLatCommunity {
         
         Job lonLatConversionJob = new Job(new Configuration());
 
+        lonLatConversionJob.setNumReduceTasks(4);
+        
         lonLatConversionJob.setJobName("Find the community where the crime was commited");
         lonLatConversionJob.setJarByClass(MapLonLatCommunity.class);
         

@@ -81,7 +81,7 @@ public class DateTypeValue implements WritableComparable<DateTypeValue>, Cloneab
 	}
 
 	@Override
-	protected DateTypeValue clone() throws CloneNotSupportedException{
+	public DateTypeValue clone() throws CloneNotSupportedException{
 		DateTypeValue pw = new DateTypeValue();
 		pw.date = new LongWritable(this.date.get());
 		pw.type = new Text(this.type.toString());

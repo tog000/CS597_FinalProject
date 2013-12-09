@@ -184,8 +184,8 @@ public class App
         //app.extractRequest("dead animal pickup");
         //app.subsampleDataset("311nyc_2010-present.csv",1000);
         //app.getRequestFrequencies("subsampled.csv");
-        app.getWeatherForCrime("crime_chicago.csv","weather_chicago_airport.csv");
-        //app.getWeatherFromStation("weather_chicago.csv","GHCND:USW00014819");
+        //app.getWeatherForCrime("crime_chicago.csv","weather_chicago_airport.csv");
+        app.getWeatherFromStation("weather_chicago.csv","GHCND:USC00111497");
     }
 }
 
