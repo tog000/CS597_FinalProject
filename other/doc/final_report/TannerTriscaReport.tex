@@ -66,7 +66,8 @@ After we shifted our focus from crime to the 311 requests, we began performing a
 Once we reached the dead end with the 311 requests we decided to switch our focus to finding a new, crime dataset that would have the features which would make the analysis far more interesting. Our paper is written about that dataset, namely, the Chicago crimes dataset.
 
 \subsection{Data Analysis}
-In order to calculate correlation between different datasets, we needed a common column or key between them.
+
+As an initial step, we are calculating the correlation between crime frequency and different indicators. To achieve this, we performed a join operation between the weather data and the crime frequency data with date as the key. For the socio-economic and public health indicators we joined the datasets on the community area where the statistics came from and where the crime was committed, and the crime frequency was accumulated.\\
 
 \begin{table}
 	\begin{tabular}{|c|l|}
@@ -92,12 +93,10 @@ YOUNG\_OR\_OLDER & Percentage of poersons 16 or younger and 65 or older \\
 	\caption{Indicators and their description}
 \end{table}
 
-As an initial step, we are calculating the correlation between crime frequency and different indicators. To achieve this, we performed a join operation between the weather data and the crime frequency data with date as the key. For the socio-economic and public health indicators we joined the datasets on the community area where the statistics came from and where the crime was committed, and the crime frequency was accumulated.\\
-
 These scatter plots are the top most highly correlated pairs of indicator/crime type.\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{media/ScatterPlot1.eps}\hfill
+\includegraphics[width=0.5\linewidth]{media/ScatterPlot1.eps}\\
 \includegraphics[width=0.3\linewidth]{media/ScatterPlot2.eps}
 \includegraphics[width=0.3\linewidth]{media/ScatterPlot3.eps}
 \includegraphics[width=0.3\linewidth]{media/ScatterPlot4.eps}
