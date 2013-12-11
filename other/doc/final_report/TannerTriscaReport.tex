@@ -5,7 +5,7 @@
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{float}
-\renewcommand{\arraystretch}{2}
+\renewcommand{\arraystretch}{1.1}
 
 \title{{\large{COMPSCI 597: Big Data and NOSQL Databases}}\\Term Project Final Report}
 \author{Tanner, Reuben, Trisca, Gabriel}
@@ -14,6 +14,8 @@
 \maketitle
 
 \tableofcontents
+
+\newpage
 
 \section{Introduction}
 \subsection{Motivation}
@@ -66,7 +68,7 @@ Once we reached the dead end with the 311 requests we decided to switch our focu
 \subsection{Data Analysis}
 In order to calculate correlation between different datasets, we needed a common column or key between them.
 
-\begin{figure}
+\begin{table}
 	\begin{tabular}{|c|l|}
 	\hline 
 	\textbf{Indicator Name} & \textbf{Description} \\ 
@@ -87,7 +89,8 @@ UNEMPLOYMENT & Unemployment rate (percentage)\\\hline
 YOUNG\_OR\_OLDER & Percentage of poersons 16 or younger and 65 or older \\
 \hline
 	\end{tabular} 
-\end{figure}
+	\caption{Indicators and their description}
+\end{table}
 
 As an initial step, we are calculating the correlation between crime frequency and different indicators. To achieve this, we performed a join operation between the weather data and the crime frequency data with date as the key. For the socio-economic and public health indicators we joined the datasets on the community area where the statistics came from and where the crime was committed, and the crime frequency was accumulated.\\
 
@@ -139,7 +142,8 @@ Specifically, we see that looking at the percentage of people below the poverty 
 An alternative tree using all the indicators provides the following result:
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth]{media/full_tree.eps}
+	\centering
+	\includegraphics[width=0.6\linewidth]{media/full_tree.eps}
 	\caption{Tree using all socio-economic indicators (Tree has been pruned)}
 \end{figure}
 
