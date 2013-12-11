@@ -11,7 +11,8 @@ else
                 mvn package;
         fi
 
-	project_path=/home/projects/eucleia
+	project_path=/user/tog/
+	#project_path=/home/projects/eucleia
 
 	input=$project_path/$1;
 	output=$project_path/$2;

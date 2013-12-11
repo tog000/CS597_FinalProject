@@ -1,0 +1,1649 @@
+%!PS-Adobe-2.0 EPSF-1.2
+%%Creator: MATLAB, The MathWorks, Inc. Version 8.1.0.604 (R2013a). Operating System: Linux 3.11.0-13-generic #20-Ubuntu SMP Wed Oct 23 07:38:26 UTC 2013 x86_64.
+%%Title: figures/ScatterPlot4.eps
+%%CreationDate: 12/08/2013  12:33:20
+%%DocumentNeededFonts: Helvetica
+%%DocumentProcessColors: Cyan Magenta Yellow Black
+%%Extensions: CMYK
+%%Pages: 1
+%%BoundingBox:   146    65  1296   821
+%%EndComments
+
+%%BeginProlog
+% MathWorks dictionary
+/MathWorks 160 dict begin
+% definition operators
+/bdef {bind def} bind def
+/ldef {load def} bind def
+/xdef {exch def} bdef
+/xstore {exch store} bdef
+% operator abbreviations
+/c  /clip ldef
+/cc /concat ldef
+/cp /closepath ldef
+/gr /grestore ldef
+/gs /gsave ldef
+/mt /moveto ldef
+/np /newpath ldef
+/cm /currentmatrix ldef
+/sm /setmatrix ldef
+/rm /rmoveto ldef
+/rl /rlineto ldef
+/s {show newpath} bdef
+/sc {setcmykcolor} bdef
+/sr /setrgbcolor ldef
+/sg /setgray ldef
+/w /setlinewidth ldef
+/j /setlinejoin ldef
+/cap /setlinecap ldef
+/rc {rectclip} bdef
+/rf {rectfill} bdef
+% page state control
+/pgsv () def
+/bpage {/pgsv save def} bdef
+/epage {pgsv restore} bdef
+/bplot /gsave ldef
+/eplot {stroke grestore} bdef
+% orientation switch
+/portraitMode 0 def /landscapeMode 1 def /rotateMode 2 def
+% coordinate system mappings
+/dpi2point 0 def
+% font control
+/FontSize 0 def
+/FMS {/FontSize xstore findfont [FontSize 0 0 FontSize neg 0 0]
+  makefont setfont} bdef
+/reencode {exch dup where {pop load} {pop StandardEncoding} ifelse
+  exch dup 3 1 roll findfont dup length dict begin
+  { 1 index /FID ne {def}{pop pop} ifelse } forall
+  /Encoding exch def currentdict end definefont pop} bdef
+/isroman {findfont /CharStrings get /Agrave known} bdef
+/FMSR {3 1 roll 1 index dup isroman {reencode} {pop pop} ifelse
+  exch FMS} bdef
+/csm {1 dpi2point div -1 dpi2point div scale neg translate
+ dup landscapeMode eq {pop -90 rotate}
+  {rotateMode eq {90 rotate} if} ifelse} bdef
+% line types: solid, dotted, dashed, dotdash
+/SO { [] 0 setdash } bdef
+/DO { [.5 dpi2point mul 4 dpi2point mul] 0 setdash } bdef
+/DA { [6 dpi2point mul] 0 setdash } bdef
+/DD { [.5 dpi2point mul 4 dpi2point mul 6 dpi2point mul 4
+  dpi2point mul] 0 setdash } bdef
+% macros for lines and objects
+/L {lineto stroke} bdef
+/MP {3 1 roll moveto 1 sub {rlineto} repeat} bdef
+/AP {{rlineto} repeat} bdef
+/PDlw -1 def
+/W {/PDlw currentlinewidth def setlinewidth} def
+/PP {closepath eofill} bdef
+/DP {closepath stroke} bdef
+/MR {4 -2 roll moveto dup  0 exch rlineto exch 0 rlineto
+  neg 0 exch rlineto closepath} bdef
+/FR {MR stroke} bdef
+/PR {MR fill} bdef
+/L1i {{currentfile picstr readhexstring pop} image} bdef
+/tMatrix matrix def
+/MakeOval {newpath tMatrix currentmatrix pop translate scale
+0 0 1 0 360 arc tMatrix setmatrix} bdef
+/FO {MakeOval stroke} bdef
+/PO {MakeOval fill} bdef
+/PD {currentlinewidth 2 div 0 360 arc fill
+   PDlw -1 eq not {PDlw w /PDlw -1 def} if} def
+/FA {newpath tMatrix currentmatrix pop translate scale
+  0 0 1 5 -2 roll arc tMatrix setmatrix stroke} bdef
+/PA {newpath tMatrix currentmatrix pop	translate 0 0 moveto scale
+  0 0 1 5 -2 roll arc closepath tMatrix setmatrix fill} bdef
+/FAn {newpath tMatrix currentmatrix pop translate scale
+  0 0 1 5 -2 roll arcn tMatrix setmatrix stroke} bdef
+/PAn {newpath tMatrix currentmatrix pop translate 0 0 moveto scale
+  0 0 1 5 -2 roll arcn closepath tMatrix setmatrix fill} bdef
+/vradius 0 def /hradius 0 def /lry 0 def
+/lrx 0 def /uly 0 def /ulx 0 def /rad 0 def
+/MRR {/vradius xdef /hradius xdef /lry xdef /lrx xdef /uly xdef
+  /ulx xdef newpath tMatrix currentmatrix pop ulx hradius add uly
+  vradius add translate hradius vradius scale 0 0 1 180 270 arc 
+  tMatrix setmatrix lrx hradius sub uly vradius add translate
+  hradius vradius scale 0 0 1 270 360 arc tMatrix setmatrix
+  lrx hradius sub lry vradius sub translate hradius vradius scale
+  0 0 1 0 90 arc tMatrix setmatrix ulx hradius add lry vradius sub
+  translate hradius vradius scale 0 0 1 90 180 arc tMatrix setmatrix
+  closepath} bdef
+/FRR {MRR stroke } bdef
+/PRR {MRR fill } bdef
+/MlrRR {/lry xdef /lrx xdef /uly xdef /ulx xdef /rad lry uly sub 2 div def
+  newpath tMatrix currentmatrix pop ulx rad add uly rad add translate
+  rad rad scale 0 0 1 90 270 arc tMatrix setmatrix lrx rad sub lry rad
+  sub translate rad rad scale 0 0 1 270 90 arc tMatrix setmatrix
+  closepath} bdef
+/FlrRR {MlrRR stroke } bdef
+/PlrRR {MlrRR fill } bdef
+/MtbRR {/lry xdef /lrx xdef /uly xdef /ulx xdef /rad lrx ulx sub 2 div def
+  newpath tMatrix currentmatrix pop ulx rad add uly rad add translate
+  rad rad scale 0 0 1 180 360 arc tMatrix setmatrix lrx rad sub lry rad
+  sub translate rad rad scale 0 0 1 0 180 arc tMatrix setmatrix
+  closepath} bdef
+/FtbRR {MtbRR stroke } bdef
+/PtbRR {MtbRR fill } bdef
+/stri 6 array def /dtri 6 array def
+/smat 6 array def /dmat 6 array def
+/tmat1 6 array def /tmat2 6 array def /dif 3 array def
+/asub {/ind2 exch def /ind1 exch def dup dup
+  ind1 get exch ind2 get sub exch } bdef
+/tri_to_matrix {
+  2 0 asub 3 1 asub 4 0 asub 5 1 asub
+  dup 0 get exch 1 get 7 -1 roll astore } bdef
+/compute_transform {
+  dmat dtri tri_to_matrix tmat1 invertmatrix 
+  smat stri tri_to_matrix tmat2 concatmatrix } bdef
+/ds {stri astore pop} bdef
+/dt {dtri astore pop} bdef
+/db {2 copy /cols xdef /rows xdef mul dup 3 mul string
+  currentfile exch readhexstring pop
+  dup 0 3 index getinterval /rbmap xdef
+  dup 2 index dup getinterval /gbmap xdef
+  1 index dup 2 mul exch getinterval /bbmap xdef pop pop}bdef
+/it {gs np dtri aload pop moveto lineto lineto cp c
+  cols rows 8 compute_transform 
+  rbmap gbmap bbmap true 3 colorimage gr}bdef
+/il {newpath moveto lineto stroke}bdef
+currentdict end def
+%%EndProlog
+
+%%BeginSetup
+MathWorks begin
+
+0 cap
+
+end
+%%EndSetup
+
+%%Page: 1 1
+%%BeginPageSetup
+%%PageBoundingBox:   146    65  1296   821
+MathWorks begin
+bpage
+%%EndPageSetup
+
+%%BeginObject: obj1
+bplot
+
+/dpi2point 12 def
+portraitMode 0000 10212 csm
+
+ 1760   349 13792  9080 MR c np
+85 dict begin %Colortable dictionary
+/c0 { 0.000000 0.000000 0.000000 sr} bdef
+/c1 { 1.000000 1.000000 1.000000 sr} bdef
+/c2 { 0.900000 0.000000 0.000000 sr} bdef
+/c3 { 0.000000 0.820000 0.000000 sr} bdef
+/c4 { 0.000000 0.000000 0.800000 sr} bdef
+/c5 { 0.910000 0.820000 0.320000 sr} bdef
+/c6 { 1.000000 0.260000 0.820000 sr} bdef
+/c7 { 0.000000 0.820000 0.820000 sr} bdef
+c0
+1 j
+1 sg
+   0    0 17021 10213 PR
+6 w
+0 3484 3632 0 0 -3484 2213 4250 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 2213 4250 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+2213 4250 mt 5845 4250 L
+2213  766 mt 5845  766 L
+2213 4250 mt 2213  766 L
+5845 4250 mt 5845  766 L
+2213 4250 mt 5845 4250 L
+2213 4250 mt 2213  766 L
+2213 4250 mt 2213 4213 L
+2213  766 mt 2213  802 L
+%%IncludeResource: font Helvetica
+/Helvetica /ISOLatin1Encoding 120 FMSR
+
+2180 4395 mt 
+(0) s
+3423 4250 mt 3423 4213 L
+3423  766 mt 3423  802 L
+3390 4395 mt 
+(5) s
+4634 4250 mt 4634 4213 L
+4634  766 mt 4634  802 L
+4568 4395 mt 
+(10) s
+5845 4250 mt 5845 4213 L
+5845  766 mt 5845  802 L
+5779 4395 mt 
+(15) s
+2213 4250 mt 2249 4250 L
+5845 4250 mt 5808 4250 L
+2045 4294 mt 
+(60) s
+2213 3752 mt 2249 3752 L
+5845 3752 mt 5808 3752 L
+2045 3796 mt 
+(65) s
+2213 3254 mt 2249 3254 L
+5845 3254 mt 5808 3254 L
+2045 3298 mt 
+(70) s
+2213 2756 mt 2249 2756 L
+5845 2756 mt 5808 2756 L
+2045 2800 mt 
+(75) s
+2213 2259 mt 2249 2259 L
+5845 2259 mt 5808 2259 L
+2045 2303 mt 
+(80) s
+2213 1761 mt 2249 1761 L
+5845 1761 mt 5808 1761 L
+2045 1805 mt 
+(85) s
+2213 1263 mt 2249 1263 L
+5845 1263 mt 5808 1263 L
+2045 1307 mt 
+(90) s
+2213  766 mt 2249  766 L
+5845  766 mt 5808  766 L
+2045  810 mt 
+(95) s
+2213 4250 mt 5845 4250 L
+2213  766 mt 5845  766 L
+2213 4250 mt 2213  766 L
+5845 4250 mt 5845  766 L
+gs 2213 766 3633 3485 MR c np
+gr
+
+gs 2214 574 3873 3559 MR c np
+80 W
+/c8 { 0.000000 0.000000 1.000000 sr} bdef
+c8
+3181 2955 PD
+80 W
+2939 3145 PD
+80 W
+2939 2488 PD
+80 W
+2455 2209 PD
+80 W
+2697 2219 PD
+80 W
+3423 2348 PD
+80 W
+2455 2687 PD
+80 W
+4876 3284 PD
+80 W
+2455 1602 PD
+80 W
+2697 1323 PD
+80 W
+2939 2926 PD
+80 W
+2939 2279 PD
+80 W
+2939 2269 PD
+80 W
+3181 2846 PD
+80 W
+2455 2816 PD
+80 W
+3423 3164 PD
+80 W
+3181 2438 PD
+80 W
+5845 2965 PD
+80 W
+3423 2707 PD
+80 W
+2697 2936 PD
+80 W
+2939 3115 PD
+80 W
+3423 2677 PD
+80 W
+2939 2498 PD
+80 W
+2939 1751 PD
+80 W
+2939 2348 PD
+80 W
+2455 2657 PD
+80 W
+2455 2438 PD
+80 W
+2697 2448 PD
+80 W
+2697 2836 PD
+80 W
+2939 2498 PD
+80 W
+2455 2756 PD
+80 W
+2455 3115 PD
+80 W
+3181 2926 PD
+80 W
+3181 3065 PD
+80 W
+2939 2766 PD
+80 W
+3423 2726 PD
+80 W
+2939 3005 PD
+80 W
+2455 2806 PD
+80 W
+2455 2567 PD
+80 W
+2939 2129 PD
+80 W
+3423 3354 PD
+80 W
+2455 2756 PD
+80 W
+2455 2846 PD
+80 W
+2697 3125 PD
+80 W
+2455 2926 PD
+80 W
+2939 1990 PD
+80 W
+3181 2089 PD
+80 W
+2455 2219 PD
+80 W
+2455 2139 PD
+80 W
+2697 2667 PD
+80 W
+3665 3284 PD
+80 W
+3181 3025 PD
+80 W
+2697 2020 PD
+80 W
+3181 3075 PD
+80 W
+3181 2418 PD
+80 W
+4150 3891 PD
+80 W
+2697 2060 PD
+80 W
+2455 2647 PD
+80 W
+2697 1781 PD
+80 W
+3423 2717 PD
+80 W
+2455 815 PD
+80 W
+2939 2806 PD
+gr
+
+c8
+gs 2213 766 3633 3485 MR c np
+gr
+
+0 sg
+2805  533 mt 
+(File:/scatter HPRENATAL CAREC33-r-00000) s
+3086  671 mt 
+(Spearman Correlation = -0.336569) s
+1963 2995 mt  -90 rotate
+(PRENATAL CARE) s
+90 rotate
+2753 4538 mt 
+(BATTERY AGG PO HANDS ETC SERIOUS INJ) s
+1 sg
+0 3484 3632 0 0 -3484 6992 4250 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 6992 4250 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+6992 4250 mt 10624 4250 L
+6992  766 mt 10624  766 L
+6992 4250 mt 6992  766 L
+10624 4250 mt 10624  766 L
+6992 4250 mt 10624 4250 L
+6992 4250 mt 6992  766 L
+6992 4250 mt 6992 4213 L
+6992  766 mt 6992  802 L
+6959 4395 mt 
+(0) s
+7718 4250 mt 7718 4213 L
+7718  766 mt 7718  802 L
+7652 4395 mt 
+(50) s
+8444 4250 mt 8444 4213 L
+8444  766 mt 8444  802 L
+8344 4395 mt 
+(100) s
+9171 4250 mt 9171 4213 L
+9171  766 mt 9171  802 L
+9071 4395 mt 
+(150) s
+9897 4250 mt 9897 4213 L
+9897  766 mt 9897  802 L
+9797 4395 mt 
+(200) s
+10624 4250 mt 10624 4213 L
+10624  766 mt 10624  802 L
+10524 4395 mt 
+(250) s
+6992 4250 mt 7028 4250 L
+10624 4250 mt 10587 4250 L
+6824 4294 mt 
+(60) s
+6992 3752 mt 7028 3752 L
+10624 3752 mt 10587 3752 L
+6824 3796 mt 
+(65) s
+6992 3254 mt 7028 3254 L
+10624 3254 mt 10587 3254 L
+6824 3298 mt 
+(70) s
+6992 2756 mt 7028 2756 L
+10624 2756 mt 10587 2756 L
+6824 2800 mt 
+(75) s
+6992 2259 mt 7028 2259 L
+10624 2259 mt 10587 2259 L
+6824 2303 mt 
+(80) s
+6992 1761 mt 7028 1761 L
+10624 1761 mt 10587 1761 L
+6824 1805 mt 
+(85) s
+6992 1263 mt 7028 1263 L
+10624 1263 mt 10587 1263 L
+6824 1307 mt 
+(90) s
+6992  766 mt 7028  766 L
+10624  766 mt 10587  766 L
+6824  810 mt 
+(95) s
+6992 4250 mt 10624 4250 L
+6992  766 mt 10624  766 L
+6992 4250 mt 6992  766 L
+10624 4250 mt 10624  766 L
+gs 6992 766 3633 3485 MR c np
+gr
+
+gs 6809 574 3563 3559 MR c np
+80 W
+c8
+7849 2955 PD
+80 W
+7791 3145 PD
+80 W
+7965 2488 PD
+80 W
+7413 2209 PD
+80 W
+7355 2219 PD
+80 W
+8110 2348 PD
+80 W
+7936 2687 PD
+80 W
+9127 3284 PD
+80 W
+7050 1602 PD
+80 W
+7180 1323 PD
+80 W
+7166 1970 PD
+80 W
+7166 2328 PD
+80 W
+7137 2348 PD
+80 W
+7515 2926 PD
+80 W
+7791 2279 PD
+80 W
+7326 1990 PD
+80 W
+7718 2269 PD
+80 W
+8168 2846 PD
+80 W
+7137 2498 PD
+80 W
+7485 2816 PD
+80 W
+7268 2508 PD
+80 W
+8749 3164 PD
+80 W
+8139 2438 PD
+80 W
+10130 2965 PD
+80 W
+8633 2707 PD
+80 W
+8415 2936 PD
+80 W
+7921 3115 PD
+80 W
+8488 2677 PD
+80 W
+8677 2498 PD
+80 W
+7645 2179 PD
+80 W
+7776 1751 PD
+80 W
+7297 2348 PD
+80 W
+7573 2657 PD
+80 W
+8139 2438 PD
+80 W
+7558 2448 PD
+80 W
+7718 2836 PD
+80 W
+7238 2498 PD
+80 W
+7093 2756 PD
+80 W
+7224 3115 PD
+80 W
+8197 2926 PD
+80 W
+9054 3065 PD
+80 W
+7718 2766 PD
+80 W
+7253 2229 PD
+80 W
+8183 2726 PD
+80 W
+7093 3413 PD
+80 W
+7950 3005 PD
+80 W
+7209 2806 PD
+80 W
+7166 2567 PD
+80 W
+7195 2129 PD
+80 W
+8793 3354 PD
+80 W
+7268 2756 PD
+80 W
+7108 3563 PD
+80 W
+7268 2846 PD
+80 W
+7950 3125 PD
+80 W
+7238 2926 PD
+80 W
+7311 2209 PD
+80 W
+7645 1990 PD
+80 W
+7224 2826 PD
+80 W
+7573 2089 PD
+80 W
+7471 2219 PD
+80 W
+7238 2139 PD
+80 W
+8241 2667 PD
+80 W
+7456 2229 PD
+80 W
+8706 3284 PD
+80 W
+8662 3025 PD
+80 W
+7515 2020 PD
+80 W
+8473 3075 PD
+80 W
+7311 1681 PD
+80 W
+7398 1910 PD
+80 W
+8430 2418 PD
+80 W
+8895 3891 PD
+80 W
+7311 2060 PD
+80 W
+7674 2647 PD
+80 W
+7224 1781 PD
+80 W
+7747 2717 PD
+80 W
+7151 815 PD
+80 W
+7558 2806 PD
+gr
+
+c8
+gs 6992 766 3633 3485 MR c np
+gr
+
+0 sg
+7618  533 mt 
+(File:/scatter HPRENATAL CAREC6-r-00000) s
+7865  671 mt 
+(Spearman Correlation = -0.435249) s
+6742 2995 mt  -90 rotate
+(PRENATAL CARE) s
+90 rotate
+7392 4538 mt 
+(PUBLIC PEACE VIOLATION RECKLESS CONDUCT) s
+1 sg
+0 3484 3632 0 0 -3484 11771 4250 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 11771 4250 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+11771 4250 mt 15403 4250 L
+11771  766 mt 15403  766 L
+11771 4250 mt 11771  766 L
+15403 4250 mt 15403  766 L
+11771 4250 mt 15403 4250 L
+11771 4250 mt 11771  766 L
+11771 4250 mt 11771 4213 L
+11771  766 mt 11771  802 L
+11738 4395 mt 
+(0) s
+12376 4250 mt 12376 4213 L
+12376  766 mt 12376  802 L
+12310 4395 mt 
+(10) s
+12981 4250 mt 12981 4213 L
+12981  766 mt 12981  802 L
+12915 4395 mt 
+(20) s
+13587 4250 mt 13587 4213 L
+13587  766 mt 13587  802 L
+13521 4395 mt 
+(30) s
+14192 4250 mt 14192 4213 L
+14192  766 mt 14192  802 L
+14126 4395 mt 
+(40) s
+14797 4250 mt 14797 4213 L
+14797  766 mt 14797  802 L
+14731 4395 mt 
+(50) s
+15403 4250 mt 15403 4213 L
+15403  766 mt 15403  802 L
+15337 4395 mt 
+(60) s
+11771 4250 mt 11807 4250 L
+15403 4250 mt 15366 4250 L
+11603 4294 mt 
+(60) s
+11771 3752 mt 11807 3752 L
+15403 3752 mt 15366 3752 L
+11603 3796 mt 
+(65) s
+11771 3254 mt 11807 3254 L
+15403 3254 mt 15366 3254 L
+11603 3298 mt 
+(70) s
+11771 2756 mt 11807 2756 L
+15403 2756 mt 15366 2756 L
+11603 2800 mt 
+(75) s
+11771 2259 mt 11807 2259 L
+15403 2259 mt 15366 2259 L
+11603 2303 mt 
+(80) s
+11771 1761 mt 11807 1761 L
+15403 1761 mt 15366 1761 L
+11603 1805 mt 
+(85) s
+11771 1263 mt 11807 1263 L
+15403 1263 mt 15366 1263 L
+11603 1307 mt 
+(90) s
+11771  766 mt 11807  766 L
+15403  766 mt 15366  766 L
+11603  810 mt 
+(95) s
+11771 4250 mt 15403 4250 L
+11771  766 mt 15403  766 L
+11771 4250 mt 11771  766 L
+15403 4250 mt 15403  766 L
+gs 11771 766 3633 3485 MR c np
+gr
+
+gs 11590 574 3812 3559 MR c np
+80 W
+c8
+13163 2955 PD
+80 W
+12739 3145 PD
+80 W
+13042 2488 PD
+80 W
+12436 2209 PD
+80 W
+12315 2219 PD
+80 W
+13102 2348 PD
+80 W
+12921 2687 PD
+80 W
+14071 3284 PD
+80 W
+12194 1323 PD
+80 W
+12073 1970 PD
+80 W
+11831 2328 PD
+80 W
+12013 2348 PD
+80 W
+12436 2926 PD
+80 W
+12981 2279 PD
+80 W
+12013 1990 PD
+80 W
+12921 2269 PD
+80 W
+13405 2846 PD
+80 W
+11831 2498 PD
+80 W
+12679 2816 PD
+80 W
+12073 2508 PD
+80 W
+13708 3164 PD
+80 W
+13284 2438 PD
+80 W
+15160 2965 PD
+80 W
+14131 2707 PD
+80 W
+14071 2936 PD
+80 W
+12921 3115 PD
+80 W
+14131 2677 PD
+80 W
+13465 2498 PD
+80 W
+12679 2179 PD
+80 W
+12739 1751 PD
+80 W
+12013 2348 PD
+80 W
+12557 2657 PD
+80 W
+13526 2438 PD
+80 W
+12557 2448 PD
+80 W
+12739 2836 PD
+80 W
+12134 2498 PD
+80 W
+11831 2756 PD
+80 W
+12134 3115 PD
+80 W
+13284 2926 PD
+80 W
+14252 3065 PD
+80 W
+12557 2766 PD
+80 W
+12073 2229 PD
+80 W
+14252 2726 PD
+80 W
+11831 3413 PD
+80 W
+12860 3005 PD
+80 W
+12073 2806 PD
+80 W
+11892 2567 PD
+80 W
+12134 2129 PD
+80 W
+13405 3354 PD
+80 W
+12255 2756 PD
+80 W
+11952 3563 PD
+80 W
+12134 2846 PD
+80 W
+12981 3125 PD
+80 W
+11952 2926 PD
+80 W
+12194 2209 PD
+80 W
+12497 1990 PD
+80 W
+12073 2826 PD
+80 W
+12618 2089 PD
+80 W
+12376 2219 PD
+80 W
+12194 2139 PD
+80 W
+13405 2667 PD
+80 W
+12497 2229 PD
+80 W
+14131 3284 PD
+80 W
+14071 3025 PD
+80 W
+12497 2020 PD
+80 W
+13889 3075 PD
+80 W
+12436 1681 PD
+80 W
+12194 1910 PD
+80 W
+13708 2418 PD
+80 W
+13950 3891 PD
+80 W
+12013 2060 PD
+80 W
+12376 2647 PD
+80 W
+12013 1781 PD
+80 W
+12981 2717 PD
+80 W
+11952 815 PD
+80 W
+12315 2806 PD
+gr
+
+c8
+gs 11771 766 3633 3485 MR c np
+gr
+
+0 sg
+12363  533 mt 
+(File:/scatter HPRENATAL CAREC19-r-00000) s
+12644  671 mt 
+(Spearman Correlation = -0.382871) s
+11521 2995 mt  -90 rotate
+(PRENATAL CARE) s
+90 rotate
+12248 4538 mt 
+(CRIM SEXUAL ASSAULT AGGRAVATED: OTHER) s
+1 sg
+0 3484 3632 0 0 -3484 2213 9089 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 2213 9089 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+2213 9089 mt 5845 9089 L
+2213 5605 mt 5845 5605 L
+2213 9089 mt 2213 5605 L
+5845 9089 mt 5845 5605 L
+2213 9089 mt 5845 9089 L
+2213 9089 mt 2213 5605 L
+2213 9089 mt 2213 9052 L
+2213 5605 mt 2213 5641 L
+2180 9234 mt 
+(0) s
+2939 9089 mt 2939 9052 L
+2939 5605 mt 2939 5641 L
+2873 9234 mt 
+(50) s
+3665 9089 mt 3665 9052 L
+3665 5605 mt 3665 5641 L
+3565 9234 mt 
+(100) s
+4392 9089 mt 4392 9052 L
+4392 5605 mt 4392 5641 L
+4292 9234 mt 
+(150) s
+5118 9089 mt 5118 9052 L
+5118 5605 mt 5118 5641 L
+5018 9234 mt 
+(200) s
+5845 9089 mt 5845 9052 L
+5845 5605 mt 5845 5641 L
+5745 9234 mt 
+(250) s
+2213 9089 mt 2249 9089 L
+5845 9089 mt 5808 9089 L
+2112 9133 mt 
+(0) s
+2213 8508 mt 2249 8508 L
+5845 8508 mt 5808 8508 L
+2045 8552 mt 
+(20) s
+2213 7927 mt 2249 7927 L
+5845 7927 mt 5808 7927 L
+2045 7971 mt 
+(40) s
+2213 7347 mt 2249 7347 L
+5845 7347 mt 5808 7347 L
+2045 7391 mt 
+(60) s
+2213 6766 mt 2249 6766 L
+5845 6766 mt 5808 6766 L
+2045 6810 mt 
+(80) s
+2213 6185 mt 2249 6185 L
+5845 6185 mt 5808 6185 L
+1978 6229 mt 
+(100) s
+2213 5605 mt 2249 5605 L
+5845 5605 mt 5808 5605 L
+1978 5649 mt 
+(120) s
+2213 9089 mt 5845 9089 L
+2213 5605 mt 5845 5605 L
+2213 9089 mt 2213 5605 L
+5845 9089 mt 5845 5605 L
+gs 2213 5605 3633 3485 MR c np
+gr
+
+gs 2030 5454 3592 3839 MR c np
+80 W
+c8
+3041 7904 PD
+80 W
+2997 8220 PD
+80 W
+3113 8069 PD
+80 W
+2619 7974 PD
+80 W
+2576 8845 PD
+80 W
+3259 8630 PD
+80 W
+3128 9028 PD
+80 W
+4305 8101 PD
+80 W
+2271 8975 PD
+80 W
+2387 8990 PD
+80 W
+2358 8258 PD
+80 W
+2372 8906 PD
+80 W
+2387 8784 PD
+80 W
+2779 7797 PD
+80 W
+3026 7878 PD
+80 W
+2576 8511 PD
+80 W
+2895 8014 PD
+80 W
+3375 7108 PD
+80 W
+2358 7303 PD
+80 W
+2648 7248 PD
+80 W
+2474 7065 PD
+80 W
+3941 6827 PD
+80 W
+3346 7169 PD
+80 W
+5380 6714 PD
+80 W
+3723 7660 PD
+80 W
+3622 6383 PD
+80 W
+3128 5753 PD
+80 W
+3709 5927 PD
+80 W
+3883 8023 PD
+80 W
+2837 7666 PD
+80 W
+3055 6838 PD
+80 W
+2547 8618 PD
+80 W
+2794 8096 PD
+80 W
+3346 9051 PD
+80 W
+2779 7611 PD
+80 W
+2939 7497 PD
+80 W
+2445 8342 PD
+80 W
+2314 7506 PD
+80 W
+2459 7079 PD
+80 W
+3418 7605 PD
+80 W
+4261 7175 PD
+80 W
+2939 6690 PD
+80 W
+2474 8868 PD
+80 W
+3389 6859 PD
+80 W
+2314 7094 PD
+80 W
+3200 7108 PD
+80 W
+2459 7233 PD
+80 W
+2387 7193 PD
+80 W
+2430 7117 PD
+80 W
+3970 6775 PD
+80 W
+2503 7947 PD
+80 W
+2343 7721 PD
+80 W
+2518 7216 PD
+80 W
+3186 7120 PD
+80 W
+2489 7550 PD
+80 W
+2561 7698 PD
+80 W
+2823 7402 PD
+80 W
+2459 7628 PD
+80 W
+2808 8110 PD
+80 W
+2706 7306 PD
+80 W
+2474 7767 PD
+80 W
+3462 6351 PD
+80 W
+2634 8264 PD
+80 W
+3927 6031 PD
+80 W
+3898 6641 PD
+80 W
+2721 7977 PD
+80 W
+3752 6676 PD
+80 W
+2532 7965 PD
+80 W
+2605 7794 PD
+80 W
+3723 7132 PD
+80 W
+4087 5695 PD
+80 W
+2518 8627 PD
+80 W
+2881 8650 PD
+80 W
+2445 8743 PD
+80 W
+2968 7201 PD
+80 W
+2387 8865 PD
+80 W
+2794 7733 PD
+gr
+
+c8
+gs 2213 5605 3633 3485 MR c np
+gr
+
+0 sg
+2969 5372 mt 
+(File:/scatter HTEEN BIRTHC5-r-00000) s
+3121 5510 mt 
+(Spearman Correlation = 0.441821) s
+1896 7703 mt  -90 rotate
+(TEEN BIRTH) s
+90 rotate
+3012 9377 mt 
+(BATTERY AGGRAVATED: HANDGUN) s
+1 sg
+0 3484 3632 0 0 -3484 6992 9089 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 6992 9089 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+6992 9089 mt 10624 9089 L
+6992 5605 mt 10624 5605 L
+6992 9089 mt 6992 5605 L
+10624 9089 mt 10624 5605 L
+6992 9089 mt 10624 9089 L
+6992 9089 mt 6992 5605 L
+6992 9089 mt 6992 9052 L
+6992 5605 mt 6992 5641 L
+6959 9234 mt 
+(0) s
+7718 9089 mt 7718 9052 L
+7718 5605 mt 7718 5641 L
+7652 9234 mt 
+(50) s
+8444 9089 mt 8444 9052 L
+8444 5605 mt 8444 5641 L
+8344 9234 mt 
+(100) s
+9171 9089 mt 9171 9052 L
+9171 5605 mt 9171 5641 L
+9071 9234 mt 
+(150) s
+9897 9089 mt 9897 9052 L
+9897 5605 mt 9897 5641 L
+9797 9234 mt 
+(200) s
+10624 9089 mt 10624 9052 L
+10624 5605 mt 10624 5641 L
+10524 9234 mt 
+(250) s
+6992 9089 mt 7028 9089 L
+10624 9089 mt 10587 9089 L
+6891 9133 mt 
+(0) s
+6992 8508 mt 7028 8508 L
+10624 8508 mt 10587 8508 L
+6824 8552 mt 
+(20) s
+6992 7927 mt 7028 7927 L
+10624 7927 mt 10587 7927 L
+6824 7971 mt 
+(40) s
+6992 7347 mt 7028 7347 L
+10624 7347 mt 10587 7347 L
+6824 7391 mt 
+(60) s
+6992 6766 mt 7028 6766 L
+10624 6766 mt 10587 6766 L
+6824 6810 mt 
+(80) s
+6992 6185 mt 7028 6185 L
+10624 6185 mt 10587 6185 L
+6757 6229 mt 
+(100) s
+6992 5605 mt 7028 5605 L
+10624 5605 mt 10587 5605 L
+6757 5649 mt 
+(120) s
+6992 9089 mt 10624 9089 L
+6992 5605 mt 10624 5605 L
+6992 9089 mt 6992 5605 L
+10624 9089 mt 10624 5605 L
+gs 6992 5605 3633 3485 MR c np
+gr
+
+gs 6809 5454 3563 3839 MR c np
+80 W
+c8
+7849 7904 PD
+80 W
+7791 8220 PD
+80 W
+7965 8069 PD
+80 W
+7413 7974 PD
+80 W
+7355 8845 PD
+80 W
+8110 8630 PD
+80 W
+7936 9028 PD
+80 W
+9127 8101 PD
+80 W
+7050 8975 PD
+80 W
+7180 8990 PD
+80 W
+7166 8258 PD
+80 W
+7166 8906 PD
+80 W
+7137 8784 PD
+80 W
+7515 7797 PD
+80 W
+7791 7878 PD
+80 W
+7326 8511 PD
+80 W
+7718 8014 PD
+80 W
+8168 7108 PD
+80 W
+7137 7303 PD
+80 W
+7485 7248 PD
+80 W
+7268 7065 PD
+80 W
+8749 6827 PD
+80 W
+8139 7169 PD
+80 W
+10130 6714 PD
+80 W
+8633 7660 PD
+80 W
+8415 6383 PD
+80 W
+7921 5753 PD
+80 W
+8488 5927 PD
+80 W
+8677 8023 PD
+80 W
+7645 7666 PD
+80 W
+7776 6838 PD
+80 W
+7297 8618 PD
+80 W
+7573 8096 PD
+80 W
+8139 9051 PD
+80 W
+7558 7611 PD
+80 W
+7718 7497 PD
+80 W
+7238 8342 PD
+80 W
+7093 7506 PD
+80 W
+7224 7079 PD
+80 W
+8197 7605 PD
+80 W
+9054 7175 PD
+80 W
+7718 6690 PD
+80 W
+7253 8868 PD
+80 W
+8183 6859 PD
+80 W
+7093 7094 PD
+80 W
+7950 7108 PD
+80 W
+7209 7233 PD
+80 W
+7166 7193 PD
+80 W
+7195 7117 PD
+80 W
+8793 6775 PD
+80 W
+7268 7947 PD
+80 W
+7108 7721 PD
+80 W
+7268 7216 PD
+80 W
+7950 7120 PD
+80 W
+7238 7550 PD
+80 W
+7311 7698 PD
+80 W
+7645 7402 PD
+80 W
+7224 7628 PD
+80 W
+7573 8110 PD
+80 W
+7471 7306 PD
+80 W
+7238 7767 PD
+80 W
+8241 6351 PD
+80 W
+7456 8264 PD
+80 W
+8706 6031 PD
+80 W
+8662 6641 PD
+80 W
+7515 7977 PD
+80 W
+8473 6676 PD
+80 W
+7311 7965 PD
+80 W
+7398 7794 PD
+80 W
+8430 7132 PD
+80 W
+8895 5695 PD
+80 W
+7311 8627 PD
+80 W
+7674 8650 PD
+80 W
+7224 8743 PD
+80 W
+7747 7201 PD
+80 W
+7151 8865 PD
+80 W
+7558 7733 PD
+gr
+
+c8
+gs 6992 5605 3633 3485 MR c np
+gr
+
+0 sg
+7748 5372 mt 
+(File:/scatter HTEEN BIRTHC6-r-00000) s
+7933 5510 mt 
+(Spearman Correlation = 0.42683) s
+6675 7703 mt  -90 rotate
+(TEEN BIRTH) s
+90 rotate
+7392 9377 mt 
+(PUBLIC PEACE VIOLATION RECKLESS CONDUCT) s
+1 sg
+0 3484 3632 0 0 -3484 11771 9089 4 MP
+PP
+-3632 0 0 3484 3632 0 0 -3484 11771 9089 5 MP stroke
+4 w
+DO
+SO
+6 w
+0 sg
+11771 9089 mt 15403 9089 L
+11771 5605 mt 15403 5605 L
+11771 9089 mt 11771 5605 L
+15403 9089 mt 15403 5605 L
+11771 9089 mt 15403 9089 L
+11771 9089 mt 11771 5605 L
+11771 9089 mt 11771 9052 L
+11771 5605 mt 11771 5641 L
+11738 9234 mt 
+(0) s
+12679 9089 mt 12679 9052 L
+12679 5605 mt 12679 5641 L
+12613 9234 mt 
+(50) s
+13587 9089 mt 13587 9052 L
+13587 5605 mt 13587 5641 L
+13487 9234 mt 
+(100) s
+14495 9089 mt 14495 9052 L
+14495 5605 mt 14495 5641 L
+14395 9234 mt 
+(150) s
+15403 9089 mt 15403 9052 L
+15403 5605 mt 15403 5641 L
+15303 9234 mt 
+(200) s
+11771 9089 mt 11807 9089 L
+15403 9089 mt 15366 9089 L
+11670 9133 mt 
+(0) s
+11771 8508 mt 11807 8508 L
+15403 8508 mt 15366 8508 L
+11603 8552 mt 
+(20) s
+11771 7927 mt 11807 7927 L
+15403 7927 mt 15366 7927 L
+11603 7971 mt 
+(40) s
+11771 7347 mt 11807 7347 L
+15403 7347 mt 15366 7347 L
+11603 7391 mt 
+(60) s
+11771 6766 mt 11807 6766 L
+15403 6766 mt 15366 6766 L
+11603 6810 mt 
+(80) s
+11771 6185 mt 11807 6185 L
+15403 6185 mt 15366 6185 L
+11536 6229 mt 
+(100) s
+11771 5605 mt 11807 5605 L
+15403 5605 mt 15366 5605 L
+11536 5649 mt 
+(120) s
+11771 9089 mt 15403 9089 L
+11771 5605 mt 15403 5605 L
+11771 9089 mt 11771 5605 L
+15403 9089 mt 15403 5605 L
+gs 11771 5605 3633 3485 MR c np
+gr
+
+gs 11602 5454 3843 3839 MR c np
+80 W
+c8
+12715 7904 PD
+80 W
+12679 8220 PD
+80 W
+12769 8069 PD
+80 W
+12188 7974 PD
+80 W
+12170 8845 PD
+80 W
+12969 8630 PD
+80 W
+12642 9028 PD
+80 W
+14059 8101 PD
+80 W
+11843 8975 PD
+80 W
+11988 8990 PD
+80 W
+11934 8258 PD
+80 W
+11952 8906 PD
+80 W
+11970 8784 PD
+80 W
+12352 7797 PD
+80 W
+12642 7878 PD
+80 W
+12152 8511 PD
+80 W
+12624 8014 PD
+80 W
+13114 7108 PD
+80 W
+11916 7303 PD
+80 W
+12279 7248 PD
+80 W
+12079 7065 PD
+80 W
+13550 6827 PD
+80 W
+13078 7169 PD
+80 W
+15203 6714 PD
+80 W
+13568 7660 PD
+80 W
+13260 6383 PD
+80 W
+12697 5753 PD
+80 W
+13332 5927 PD
+80 W
+13623 8023 PD
+80 W
+12461 7666 PD
+80 W
+12624 6838 PD
+80 W
+12170 8618 PD
+80 W
+12370 8096 PD
+80 W
+13060 9051 PD
+80 W
+12388 7611 PD
+80 W
+12624 7497 PD
+80 W
+12043 8342 PD
+80 W
+11898 7506 PD
+80 W
+12007 7079 PD
+80 W
+13096 7605 PD
+80 W
+13986 7175 PD
+80 W
+12642 6690 PD
+80 W
+12079 8868 PD
+80 W
+13024 6859 PD
+80 W
+11879 7094 PD
+80 W
+12933 7108 PD
+80 W
+12025 7233 PD
+80 W
+11970 7193 PD
+80 W
+12025 7117 PD
+80 W
+13695 6775 PD
+80 W
+12134 7947 PD
+80 W
+11934 7721 PD
+80 W
+12134 7216 PD
+80 W
+12787 7120 PD
+80 W
+12025 7550 PD
+80 W
+12170 7698 PD
+80 W
+12461 7402 PD
+80 W
+12007 7628 PD
+80 W
+12406 8110 PD
+80 W
+12333 7306 PD
+80 W
+12079 7767 PD
+80 W
+13078 6351 PD
+80 W
+12188 8264 PD
+80 W
+13714 6031 PD
+80 W
+13532 6641 PD
+80 W
+12352 7977 PD
+80 W
+13514 6676 PD
+80 W
+12134 7965 PD
+80 W
+12170 7794 PD
+80 W
+13441 7132 PD
+80 W
+13895 5695 PD
+80 W
+12025 8627 PD
+80 W
+12533 8650 PD
+80 W
+12061 8743 PD
+80 W
+12497 7201 PD
+80 W
+11988 8865 PD
+80 W
+12333 7733 PD
+gs 11771 5605 3633 3485 MR c np
+gr
+gr
+
+c8
+0 sg
+12494 5372 mt 
+(File:/scatter HTEEN BIRTHC11-r-00000) s
+12679 5510 mt 
+(Spearman Correlation = 0.426705) s
+11454 7703 mt  -90 rotate
+(TEEN BIRTH) s
+90 rotate
+12881 9377 mt 
+(ROBBERY AGGRAVATED) s
+
+end %%Color Dict
+
+eplot
+%%EndObject
+
+epage
+end
+
+showpage
+
+%%Trailer
+%%EOF

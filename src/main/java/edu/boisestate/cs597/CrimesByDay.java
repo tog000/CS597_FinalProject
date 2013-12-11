@@ -101,7 +101,11 @@ public class CrimesByDay {
             	
             	Crime first = entry.getValue().get(0);
             	first.setFrequency(total);
-            	context.write(NullWritable.get(), first);
+            	try {
+					context.write(NullWritable.get(), first.clone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
             	
             	/*
             	context.write(NullWritable.get(), crimeFrequency);
