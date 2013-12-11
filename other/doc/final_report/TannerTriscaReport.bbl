@@ -1,0 +1,32 @@
+\begin{thebibliography}{1}
+
+\bibitem{Chen2004}
+Hsinchun Chen, Wingyan Chung, Jennifer~Jie Xu, Gang Wang, Yi~Qin, and Michael
+  Chau.
+\newblock Crime data mining: A general framework and some examples.
+\newblock {\em Computer}, 37(4):50--56, 2004.
+
+\bibitem{BUSS2012}
+Aurelio~José Figueredo, Paul~Robert Gladden, and Zachary Hohman.
+\newblock volume~1.
+\newblock University of Texas, 2012.
+
+\bibitem{Syam2006}
+Shyam~Varan Nath.
+\newblock Crime pattern detection using data mining.
+\newblock In {\em Web Intelligence and Intelligent Agent Technology Workshops,
+  2006. WI-IAT 2006 Workshops. 2006 IEEE/WIC/ACM International Conference on},
+  pages 41--44, 2006.
+
+\bibitem{Justice2008}
+Federal Bureau of~Investigation U.S. Department~of Justice.
+\newblock Crime in the united states: Uniform crime reports.
+\newblock http://www2.fbi.gov/ucr/cius2008/index.html, 2008.
+\newblock Accessed: 2013-12-5.
+
+\bibitem{Blockeel2013}
+Tong Wang, Cynthia Rudin, Daniel Wagner, and Rich Sevieri.
+\newblock Learning to detect patterns of crime.
+\newblock 8190:515--530, 2013.
+
+\end{thebibliography}
